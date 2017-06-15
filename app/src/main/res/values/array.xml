@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="style_icon">
+        <item>@string/setting_exes_list_icon_style_item1</item>
+        <item>@string/setting_exes_list_icon_style_item2</item>
+    </string-array>
+    <string-array name="size_icon">
+        <item>@string/setting_exes_list_icon_size_item1</item>
+        <item>@string/setting_exes_list_icon_size_item2</item>
+        <item>@string/setting_exes_list_icon_size_item3</item>
+        <item>@string/setting_exes_list_icon_size_item4</item>
+    </string-array>
+    <string-array name="size_text">
+        <item>@string/setting_exes_list_text_size_item1</item>
+        <item>@string/setting_exes_list_text_size_item2</item>
+        <item>@string/setting_exes_list_text_size_item3</item>
+      </string-array>
+</resources>

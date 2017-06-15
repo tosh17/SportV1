@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="navigation_item1">Старт</string>
+    <string name="navigation_item2">Мои тренеровки</string>
+    <string name="navigation_item3">История</string>
+    <string name="navigation_item4">Статистика</string>
+    <string name="navigation_item5">Измерения</string>
+    <string name="navigation_title">Fitness</string>
+
+    <string name="app_name_seting">Настройки</string>
+    <string name="setting_exes_list_icon_title_summ">настройка графического вида упражнения</string>
+    <string name="setting_exes_list_icon_title">Иконки</string>
+    <string name="setting_exes_list_icon_style_title">Выбор темы иконок</string>
+    <string name="setting_exes_list_icon_style_item1">Мускулы</string>
+    <string name="setting_exes_list_icon_style_item2">Халк</string>
+
+    <string name="setting_exes_list_icon_size_title">Размер иконок</string>
+    <string name="setting_exes_list_icon_size_item1">Крупные</string>
+    <string name="setting_exes_list_icon_size_item2">Средние</string>
+    <string name="setting_exes_list_icon_size_item3">Малые</string>
+    <string name="setting_exes_list_icon_size_item4">Отсутствуют</string>
+
+    <string name="setting_exes_list_text_title">Техт</string>
+    <string name="setting_exes_list_text_size_title">Размер шрифта</string>
+    <string name="setting_exes_list_text_size_item1">Крупный</string>
+    <string name="setting_exes_list_text_size_item2">Средний</string>
+    <string name="setting_exes_list_text_size_item3">Малый</string>
+
+
+</resources>

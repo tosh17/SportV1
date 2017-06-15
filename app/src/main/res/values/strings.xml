@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Fitness</string>
+    <string name="test_dp">default</string>
+    <string name="test_size">default</string>
+
+    <string name="my_prog_activity">My Progs List</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+
+
+
+
+
+    <string name="title_activity_test">testActivity</string>
+
+</resources>

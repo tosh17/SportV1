@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:divider="@drawable/separator"
+    android:dividerPadding="10dp"
+    android:background="@color/LigthGreen500">
+
+    <LinearLayout
+        style="@style/ListExes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/imageViewExes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="20"
+            android:src="@drawable/all"
+            />
+
+        <TextView
+            android:id="@+id/textViewListExes"
+            style="@style/ListExes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="20"
+            android:text="Разминка"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/list_test_size"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+       />
+
+
+</LinearLayout>

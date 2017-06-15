@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/setting_exes_list_icon_title"
+        android:summary="@string/setting_exes_list_icon_title_summ"
+        >
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/style_icon"
+        android:entryValues="@array/style_icon"
+        android:key="list_exes_icon_style"
+        android:title="@string/setting_exes_list_icon_style_title" />
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/size_icon"
+        android:entryValues="@array/size_icon"
+        android:key="list_exes_icon_size"
+        android:title="@string/setting_exes_list_icon_size_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_exes_list_text_title">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/size_text"
+            android:entryValues="@array/size_text"
+            android:key="list_exes_text_size"
+            android:title="@string/setting_exes_list_text_size_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
