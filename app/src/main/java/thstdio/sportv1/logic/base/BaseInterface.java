@@ -37,11 +37,17 @@ public interface BaseInterface {
     public int getExesType(int idExes);
     public String getExesTypeDescription(int idType);
 
+    /**
+     * Поиск общей информации по дню
+     * @param idprog int id Программы
+     * @param numberOfDay int id дня
+     * @return  Eday  возращает день без упражнений
+     */
     public Eday getEdayInfo(int idprog, int numberOfDay);
     /**
-     * поиск дня по ид програмы и дня(номер дня с единицы)
-     * @param idprog
-     * @param numberOfDay
+     * поиск упражнений дня по ид програмы и дня(номер дня с единицы)
+     * @param idprog  int id Программы
+     * @param numberOfDay int id дня
      * @return
      */
 
@@ -49,8 +55,8 @@ public interface BaseInterface {
 
     /**
      * поиск информации По програме
-     * @param id
-     * @return
+     * @param id int
+     * @return Eprog
      */
     public Eprog getEprogInfo(int id);
     /**
@@ -71,15 +77,16 @@ public interface BaseInterface {
      */
    public int setEpodhod(Epodhod podhod);
 
-       /**
+    /**
      * запись базу дня тренеровки, для коллекции пустой метод
+     * @param day Eday
      */
     public void setEday(Eday day);
 
     /**
      * запись базу программы тренеровки, для коллекции пустой метод
      *
-     * @param prog
+     * @param prog Eprog
      */
       public void setEprog (Eprog prog);
 
@@ -94,12 +101,25 @@ public interface BaseInterface {
      * @param exes
      */
 
-     void updateExes(Eexes exes);
+     public void updateExes(Eexes exes);
 
     /**
      * поиск индекса подхода
-     * @param podhod
-     * @return
+     * @param podhod  Epodhod
+     * @return int
      */
     public int findEpodhod(Epodhod podhod);
+
+    /**
+     * обновляет данные о дне
+     * @param day Eday
+     */
+    public void updateEday(Eday day);
+
+    /**
+     * Удаляет день из базы
+     * @param day Eday
+     */
+    public void deleteEday(Eday day);
+
 }

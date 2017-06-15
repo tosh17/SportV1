@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Eday {
 
-    private int idDay=0;
+    private int idDay = 0;
     private int idProg;
     private int nomberOfDay;
     private String description;
@@ -19,11 +19,11 @@ public class Eday {
 
     private Map<Integer, EdayList> dayList = new HashMap<Integer, EdayList>();
 
-    public Eday(int idProg, int nomberOfDay,String description) {
+    public Eday(int idProg, int nomberOfDay, String description) {
         this.idProg = idProg;
         this.nomberOfDay = nomberOfDay;
-        this.description=description;
-        count=0;
+        this.description = description;
+        count = 0;
     }
 
     public int getIdProg() {
@@ -37,6 +37,7 @@ public class Eday {
     public String getDescription() {
         return description;
     }
+
     public int getIdDay() {
         return idDay;
     }
@@ -48,31 +49,58 @@ public class Eday {
 
     /**
      * Добавляем упражнение
+     *
      * @param exes
      * @param podhod
      */
-    public void add(Eexes exes,Epodhod podhod){
-        dayList.put(count++,new EdayList(exes,podhod));
-
+    public void add(Eexes exes, Epodhod podhod) {
+        dayList.put(count++, new EdayList(exes, podhod));
     }
-    public  EdayList getEdayexes(int i){
+
+    public void del(int[] delId) {
+        for (int i : delId) {
+            dayList.remove(i);
+        }
+        reBild(delId.length);
+        count-=delId.length;
+    }
+
+    private void reBild(int delCount) {
+
+        int next = 0;
+        for (int i = 0; i < count - delCount; i++) {
+            if (!dayList.containsKey(i)) {
+                next = i + 1;
+                while (!dayList.containsKey(next)) {
+                    if (next >= count) break;
+                    next++;
+                }
+                dayList.put(i, dayList.get(next));
+                dayList.remove(next);
+            }
+        }
+    }
+
+    public EdayList getEdayexes(int i) {
         return dayList.get(i);
     }
-    public List<EdayList> getList(){
+
+    public List<EdayList> getList() {
         List<EdayList> list = new ArrayList<EdayList>();
-       for(int i=0;i<dayList.size();i++){
-           list.add(dayList.get(i));
-       }
-        return  list;
+        for (int i = 0; i < dayList.size(); i++) {
+            list.add(dayList.get(i));
+        }
+        return list;
 
     }
-    public int countOfExes(){
+
+    public int countOfExes() {
         return dayList.size();
     }
 
     public class EdayList {
-      private  Eexes exes;
-      private Epodhod podhod;
+        private Eexes exes;
+        private Epodhod podhod;
 
         public EdayList(Eexes exes, Epodhod podhod) {
             this.exes = exes;

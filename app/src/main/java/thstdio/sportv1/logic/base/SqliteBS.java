@@ -353,4 +353,21 @@ public class SqliteBS extends MainBS {
 
         return list;
     }
+
+    /**
+     * Удаляет день из базы
+     *
+     * @param day Eday
+     */
+    @Override
+    public void deleteEday(Eday day) {
+
+        String myWhere = EdayTable.INFO.Cols.ID_PROG+" = ? AND "+ EdayTable.INFO.Cols.NUMBER_DAY+" = ?";
+        String[] myArg = {new Integer(day.getIdProg()).toString(),new Integer(day.getNomberOfDay()).toString()};
+        mDatabase.delete(EdayTable.INFO.TABLE_NAME, myWhere, myArg);
+        myWhere = EdayTable.Cols.ID_DAY+" = ?";
+        myArg = new String[1];
+        myArg[0]=new Integer(day.getIdDay()).toString();
+        mDatabase.delete(EdayTable.TABLE_NAME, myWhere, myArg);
+    }
 }

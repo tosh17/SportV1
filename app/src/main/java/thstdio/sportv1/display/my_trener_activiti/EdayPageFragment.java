@@ -1,15 +1,21 @@
 package thstdio.sportv1.display.my_trener_activiti;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,12 +24,10 @@ import java.util.List;
 import thstdio.sportv1.R;
 
 import thstdio.sportv1.display.abstract_package.MyAsset;
-import thstdio.sportv1.display.abstract_package.MyRes;
+import thstdio.sportv1.display.settings_activiti.SettingListExes;
 import thstdio.sportv1.logic.ETren.Eday;
-import thstdio.sportv1.logic.ETren.EdayLab;
 import thstdio.sportv1.logic.base.BaseInterface;
 import thstdio.sportv1.logic.base.BaseLab;
-import thstdio.sportv1.logic.base.Eexepmple;
 
 
 /**
@@ -33,11 +37,18 @@ import thstdio.sportv1.logic.base.Eexepmple;
 public class EdayPageFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
     private static final String PROG_ID = "prog_id";
     private static final String DAY_ID = "day_id";
+
     public MyAsset myAsset;
     SharedPreferences prefs;
+    BaseInterface bs;
+
     private int setting_text_size=14;
     private int setting_icon_size=144;
+    Eday day;
 
+    private boolean isSelect=false;
+    public static boolean selectItem[];
+    public static int countSelect=0;
 
     public static EdayPageFragment newInstance(int idProg,int position) {
         Bundle args = new Bundle();
@@ -51,10 +62,16 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
 
     EdayPageFragment.Adapter adapter;
     RecyclerView mExesRecyclerView;
-    EdayLab eDayLab;
     int idProg,idDay;
 
-      @Override
+     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+          bs= BaseLab.getBS(getContext());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
           myAsset=new MyAsset(getContext());
@@ -71,17 +88,18 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
           prefs =
                   PreferenceManager.getDefaultSharedPreferences(getContext());
           prefs.registerOnSharedPreferenceChangeListener(this);
-          UpdateSetting(prefs);
-         // updateUI();
+
+        BaseInterface bs= BaseLab.getBS(getContext());
+        UpdateSetting(prefs);
+
         return v;
     }
 
     private void updateUI() {
-        eDayLab = EdayLab.get(this.getContext());
-        BaseInterface bs= BaseLab.getBS(getContext());
-        Eday day = bs.getEday(idProg,idDay+1);
-        List<Eday.EdayList> list = day.getList();
 
+        day = bs.getEday(idProg,idDay+1);
+        List<Eday.EdayList> list = day.getList();
+        selectItem = new boolean[list.size()];
         if (adapter == null) {
             adapter = new EdayPageFragment.Adapter(list);
             mExesRecyclerView.setAdapter(adapter);
@@ -143,16 +161,19 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
     }
 
     //Holder
-    private class Holder extends RecyclerView.ViewHolder {
+    private class Holder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView mExesTextView;
         public ImageView mImageView;
+        public CheckBox mCheckBox;
         int position;
 
         public Holder(View itemView) {
             super(itemView);
             mExesTextView = (TextView) itemView.findViewById(R.id.textViewListExes);
             mImageView=(ImageView) itemView.findViewById(R.id.imageViewExes);
+            mCheckBox=(CheckBox)itemView.findViewById(R.id.checkBoxExes);
+            mCheckBox.setOnClickListener(this);
         }
 
         public void bindHolder(int position, Eday.EdayList exes) {
@@ -166,12 +187,29 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
                 mImageView.setMinimumWidth((int) (setting_icon_size * getResources().getDisplayMetrics().density));
                 mImageView.setMinimumHeight((int) (setting_icon_size * getResources().getDisplayMetrics().density));
             }
+
+
             mExesTextView.setText("#" + (position + 1) + "  " + exes.getExes().getName());
             mExesTextView.append( System.lineSeparator() + exes.getPodhod().toString());
           //  mExesTextView.append( System.lineSeparator() + exes.getPodhod().toStringDetail());
-
             mExesTextView.setTextSize(setting_text_size);
+
+            if(isSelect) {mCheckBox.setVisibility(View.VISIBLE);}
+            else { mCheckBox.setVisibility(View.GONE);}
+
              this.position = position;
+
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+            selectItem[position] = mCheckBox.isChecked();
+            countSelect+=mCheckBox.isChecked()?1:-1;
 
         }
 
@@ -199,6 +237,7 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
             View view = layoutInflater
                     .inflate(R.layout.exes_list_item, parent, false);
             return new EdayPageFragment.Holder(view);
+
         }
 
         @Override
@@ -211,6 +250,47 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
         public int getItemCount() {
             return mExes.size();
         }
+    }
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_exes_list, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent=new Intent(getContext(), SettingListExes.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.action_sellect) {
+             isSelect=!isSelect;
+             updateUI();
+        }
+        else if(id == R.id.action_delete) {
+            int delId[]=new int[countSelect];
+            int idMass=0;
+            for(int i=0;i<selectItem.length;i++){
+                if(selectItem[i]) delId[idMass++]=i;
+            }
+            day.del(delId);
+            isSelect=false;
+            bs.updateEday(day);
+            adapter = null;
+            updateUI();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

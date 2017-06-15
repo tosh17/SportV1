@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:widgetLayout="@color/colorPBlue">
 
     <PreferenceCategory
-            android:title="@string/setting_exes_list_icon_title"
+        android:title="@string/setting_exes_list_icon_title"
         android:summary="@string/setting_exes_list_icon_title_summ"
         >
     <ListPreference

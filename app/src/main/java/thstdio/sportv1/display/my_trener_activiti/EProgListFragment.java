@@ -15,7 +15,6 @@ import java.util.List;
 
 import thstdio.sportv1.R;
 import thstdio.sportv1.display.abstract_package.MyRes;
-import thstdio.sportv1.logic.ETren.EdayLab;
 import thstdio.sportv1.logic.base.BaseInterface;
 import thstdio.sportv1.logic.base.BaseLab;
 
@@ -26,7 +25,6 @@ import thstdio.sportv1.logic.base.BaseLab;
 public class EProgListFragment extends Fragment {
     Adapter adapter;
     RecyclerView mExesRecyclerView;
-    EdayLab eDayLab;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

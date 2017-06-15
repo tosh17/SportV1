@@ -171,4 +171,26 @@ public class MainBS implements BaseInterface {
     public int findEpodhod(Epodhod podhod) {
         return 0;
     }
+
+    /**
+     * обновляет данные о дне
+     *
+     * @param day Eday
+     */
+    @Override
+    public void updateEday(Eday day) {
+        deleteEday(day);
+        setEday(day);
+    }
+
+    /**
+     * Удаляет день из базы
+     *
+     * @param day Eday
+     */
+    @Override
+    public void deleteEday(Eday day) {
+
+
+    }
 }
