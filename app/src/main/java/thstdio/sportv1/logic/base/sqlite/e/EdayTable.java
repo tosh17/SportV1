@@ -33,7 +33,7 @@ public class EdayTable {
         public static ContentValues getContentValues(Eday day) {
             ContentValues values = new ContentValues();
             values.put(Cols.ID_PROG, day.getIdProg());
-            values.put(Cols.NUMBER_DAY, day.getNomberOfDay());
+            values.put(Cols.NUMBER_DAY, day.getNumberOfDay());
             values.put(Cols.DESCRIPTION, day.getDescription());
             return values;
         }

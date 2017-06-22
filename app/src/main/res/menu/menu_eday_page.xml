@@ -6,16 +6,16 @@
         android:orderInCategory="105"
         android:title="@string/action_settings"
         android:icon="@android:drawable/ic_menu_manage"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="never" />
     <item
-        android:orderInCategory="102"
+        android:orderInCategory="101"
         android:id="@+id/action_delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="Delete"
         app:showAsAction="always"
         />
     <item
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:id="@+id/action_sellect"
         android:icon="@android:drawable/checkbox_on_background"
         android:title="Select"

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_name">Название Упражнения</string>
+    <string name="free_weight">свободныq вес</string>
+    <string name="podhod0">Разминка</string>
+    <string name="podhod1">Подход</string>
+    <string name="min">min</string>
+    <string name="max">max</string>
+    <string name="exes_type0">Общее</string>
+    <string name="exes_type1">Руки</string>
+    <string name="exes_type2">Грудь</string>
+    <string name="exes_type3">Спина</string>
+    <string name="exes_type4">Пресс</string>
+    <string name="exes_type5">Ноги</string>
+    <string name="exes_type6">Плечи</string>
+
+
+</resources>

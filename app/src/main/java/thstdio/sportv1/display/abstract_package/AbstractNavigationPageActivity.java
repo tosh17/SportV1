@@ -3,54 +3,34 @@ package thstdio.sportv1.display.abstract_package;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import thstdio.sportv1.R;
 import thstdio.sportv1.display.my_trener_activiti.EProgListActivity;
+import thstdio.sportv1.display.start_activity.StartAvtivty;
 
-public abstract class AbstractPageActivity extends AppCompatActivity
+public abstract class AbstractNavigationPageActivity extends SinglePageFragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
+    public abstract void initAfterNavigation();
 
-
-    FloatingActionButton fab;
-    private ViewPager mViewPager;
-    private int numberPage;
-    protected  abstract int getNumberPage();
-    protected abstract Fragment setFragment(int position);
-    protected abstract void init();
-    protected abstract CharSequence getMyTitle(int position);// определяет имена секций
     @LayoutRes
     protected int getLayoutResId() {
-        return R.layout.start_page_activity_main;
+        return R.layout.abstract_page_activity_main;
 
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_page_activity_main);
-        mViewPager = (ViewPager) findViewById(R.id.activity_pager_view_pager);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,38 +40,8 @@ public abstract class AbstractPageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-         init();
-        numberPage=getNumberPage();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        if(numberPage>1){
-           tabLayout.setupWithViewPager(mViewPager);}
-         else{
-            tabLayout.setVisibility(View.GONE);
-        }
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Fragment getItem(int namberOfDay) {
-
-                return setFragment(namberOfDay);
-            }
-
-            @Override
-            public int getCount() {
-                return numberPage;
-            }
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return getMyTitle(position);
-            }
-        });
+        initAfterNavigation();
     }
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -111,9 +61,10 @@ public abstract class AbstractPageActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent intent ;
         if (id == R.id.nav_start) {
-            // Handle the camera action
+            intent  = new Intent(AbstractNavigationPageActivity.this, StartAvtivty.class);
+            startActivity(intent);
         } else if (id == R.id.nav_my_tren) {
-            intent  = new Intent(AbstractPageActivity.this, EProgListActivity.class);
+            intent  = new Intent(AbstractNavigationPageActivity.this, EProgListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_history) {
 
@@ -134,8 +85,6 @@ public abstract class AbstractPageActivity extends AppCompatActivity
     }
 
     protected abstract void fabOnClic();
-    public void fabChangeImage(){
 
-        fab.setImageResource(R.drawable.ic_menu_manage);
-    }
+
 }

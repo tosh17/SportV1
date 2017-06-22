@@ -8,13 +8,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait"
+        >
 
         <!-- - Стартовая активность -->
         <activity
             android:name=".display.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,25 +27,44 @@
         <!-- -  активности Мои тренеровки -->
         <activity
             android:name=".display.my_trener_activiti.EProgListActivity"
-            android:label="@string/my_prog_activity"
+            android:label="@string/title_e_prog_list_activity"
             android:theme="@style/AppTheme.NoActionBar">
             >
         </activity>
         <activity
             android:name=".display.my_trener_activiti.EdayPage"
-            android:label="@string/my_prog_activity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity">
+        </activity>
         <activity
-            android:name=".display.test.testActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".display.my_trener_activiti.EexesAddActivity"
+            android:label="@string/title_e_exes_add_activity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".display.my_trener_activiti.EdayPage">
+        </activity>
+        <activity
+            android:name=".display.my_trener_activiti.EProgAdd"
+            android:label="@string/my_prog_activity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"></activity>
+
 
        <!-- -  активности настройки -->
     <activity
         android:name=".display.settings_activiti.SettingListExes"
-        android:label="@string/app_name_seting"
-
-        >
+        android:label="@string/app_name_seting"        >
     </activity>
+        <!-- -  активности Start -->
+        <activity
+            android:name=".display.start_activity.StartAvtivty"
+            android:label="@string/my_prog_activity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"></activity>
+
+
+        <activity
+            android:name=".display.test.testActivity"
+            android:label="@string/title_activity_test">
+           </activity>
     </application>
 </manifest>

@@ -28,6 +28,7 @@
     <string name="setting_exes_list_text_size_item1">Крупный</string>
     <string name="setting_exes_list_text_size_item2">Средний</string>
     <string name="setting_exes_list_text_size_item3">Малый</string>
+    <string name="action_load">Из базы</string>
 
 
 </resources>

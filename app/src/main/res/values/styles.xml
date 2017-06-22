@@ -12,10 +12,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">5dp</item>
-
         <item name="android:background">@color/colorPRed</item>
         <item name="android:elevation">0dp</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">1dp</item>
     </style>
 
     <style name="TextViewP2" parent="TextViewP">
@@ -39,9 +38,22 @@
     </style>
 
     <style name="ListExes">
-         <item name="android:background">@color/LigthGreen50</item>
+        <item name="android:background">@color/TLigthGreen50</item>
 
     </style>
+
+    <style name="exesSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#46bdbf</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f1f1f1 </item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f</item>
+        <item name="colorAccent">@color/colorPGrey</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

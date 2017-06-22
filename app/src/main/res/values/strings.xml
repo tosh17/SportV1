@@ -14,5 +14,7 @@
 
 
     <string name="title_activity_test">testActivity</string>
+    <string name="title_e_prog_list_activity">Мои программы</string>
+    <string name="title_e_exes_add_activity">Добавить упражнение</string>
 
 </resources>

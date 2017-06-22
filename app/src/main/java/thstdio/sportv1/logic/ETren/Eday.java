@@ -13,15 +13,15 @@ public class Eday {
 
     private int idDay = 0;
     private int idProg;
-    private int nomberOfDay;
+    private int numberOfDay;
     private String description;
     private int count;
 
     private Map<Integer, EdayList> dayList = new HashMap<Integer, EdayList>();
 
-    public Eday(int idProg, int nomberOfDay, String description) {
+    public Eday(int idProg, int numberOfDay, String description) {
         this.idProg = idProg;
-        this.nomberOfDay = nomberOfDay;
+        this.numberOfDay = numberOfDay;
         this.description = description;
         count = 0;
     }
@@ -30,8 +30,8 @@ public class Eday {
         return idProg;
     }
 
-    public int getNomberOfDay() {
-        return nomberOfDay;
+    public int getNumberOfDay() {
+        return numberOfDay;
     }
 
     public String getDescription() {

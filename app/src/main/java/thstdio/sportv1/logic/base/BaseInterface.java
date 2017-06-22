@@ -3,6 +3,8 @@ package thstdio.sportv1.logic.base;
 import java.util.List;
 
 import thstdio.sportv1.logic.ETren.*;
+import thstdio.sportv1.logic.TTren.Tday;
+import thstdio.sportv1.logic.TTren.Texes;
 
 /**
  * Created by shcherbakov on 01.06.2017.
@@ -122,4 +124,63 @@ public interface BaseInterface {
      */
     public void deleteEday(Eday day);
 
+    /**
+     *
+     * @return int Возращает максимальный id для упражнения
+     */
+    public int getIdExesMax();
+
+    /**
+     * вывод полного списка упражнений
+     * @return ывод полного списка упражнений
+     */
+    public List<Eexes> getAllExes();
+
+
+    /**
+     *
+     * @return int Возращает максимальный id для gпрограммы
+     */
+    public int getIdProgMax();
+
+    /**
+     * Записывает в базу информацию он начале тренеровки
+     * @param day Передаем день тренеровки
+     */
+    public void startTday(Tday day);
+
+    /**
+     * Завершаем тренеровку Записываем время оканчания
+     * @param day Передаем день тренеровки
+     * @param endTime Время окончания
+     */
+    public void endTday(Tday day,int endTime);
+
+    /**
+     * Поиск не завершенного дня
+     * @return  Возращает тренеровочный день
+     */
+    public Tday findNotEndTday();
+
+    /**
+     * Запись выполненого подхода в базу
+     * @param tExesValues упорядочный массив данных(порядок согластно полям таблицы)
+     */
+    public void setTexesPodhod(long[] tExesValues);
+
+    /**
+     * вспомогательная функция для востоновления тренеровочного дня
+     * @param idTday  номер тренеровочного дня в базе
+     * @param idExes  номер упражнения
+     * @return  упорядочный массив данных(порядок согластно полям таблицы)
+     */
+     int[] loadTexes(int idTday,int idExes);
+
+    /**
+     * Запись показаний измерений в базу
+     * @param date  время
+     * @param type тип
+     * @param value  значение
+     */
+     public void setMeasure(int date,int type,int value);
 }

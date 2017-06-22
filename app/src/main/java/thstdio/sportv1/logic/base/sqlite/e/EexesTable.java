@@ -10,7 +10,7 @@ import thstdio.sportv1.logic.ETren.Eexes;
  * Created by shcherbakov on 08.06.2017.
  */
 
-public final class ExesTable {
+public final class EexesTable {
     public static final String TABLE_NAME="e_exes";
     public final class Cols {
         public static final String ID="id_exes";

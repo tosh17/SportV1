@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/activity_pager_view_pager"
+    android:id="@+id/activity_pager_view_pager"
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-    tools:showIn="@layout/start_page_app_bar_main">
+    tools:showIn="@layout/abstract_page_app_bar_main"
+    android:background="@drawable/bg">
 </android.support.v4.view.ViewPager>
+
+
+

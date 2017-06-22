@@ -15,4 +15,25 @@
         <item>@string/setting_exes_list_text_size_item2</item>
         <item>@string/setting_exes_list_text_size_item3</item>
       </string-array>
+
+    <string-array name="list_type_exes">
+        <item>@string/exes_type0</item>
+        <item>@string/exes_type1</item>
+        <item>@string/exes_type2</item>
+        <item>@string/exes_type3</item>
+        <item>@string/exes_type4</item>
+        <item>@string/exes_type5</item>
+        <item>@string/exes_type6</item>
+    </string-array>
+
+    <string-array name="list_type_exes_with_none">
+        <item>                  </item>
+        <item>@string/exes_type0</item>
+        <item>@string/exes_type1</item>
+        <item>@string/exes_type2</item>
+        <item>@string/exes_type3</item>
+        <item>@string/exes_type4</item>
+        <item>@string/exes_type5</item>
+        <item>@string/exes_type6</item>
+    </string-array>
 </resources>

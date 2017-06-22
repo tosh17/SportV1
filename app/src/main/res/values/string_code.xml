@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="podhod_str">Подход  </string>
+    <string name="razminka_str">Разминка</string>
+    <string name="warning_exes_add_max_limit">Максимальное допустимое значение подходов</string>
+    <string name="warning_exes_add_min_limit">Не создано ни одного подхода</string>
+    <string name="warning_exes_search">Вы можете выбрать только одно упражнение</string>
+    <string name="warning_eprog_add_max_limit">Максимальное количество дней</string>
+</resources>

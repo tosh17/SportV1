@@ -41,7 +41,7 @@ public enum Types {
             case 3:
                 return Back;
             case 4:
-                return Back;
+                return Press;
             case 5:
                 return Legs;
             case 6:

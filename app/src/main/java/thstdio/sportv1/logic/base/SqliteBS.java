@@ -12,13 +12,15 @@ import thstdio.sportv1.logic.ETren.Eday;
 import thstdio.sportv1.logic.ETren.Eexes;
 import thstdio.sportv1.logic.ETren.Epodhod;
 import thstdio.sportv1.logic.ETren.Eprog;
+import thstdio.sportv1.logic.TTren.Tday;
 import thstdio.sportv1.logic.base.sqlite.BsHelper;
 import thstdio.sportv1.logic.base.sqlite.MyCursorWrapper;
 import thstdio.sportv1.logic.base.sqlite.e.EdayTable;
 import thstdio.sportv1.logic.base.sqlite.e.EpodhodTable;
 import thstdio.sportv1.logic.base.sqlite.e.EprogTable;
-import thstdio.sportv1.logic.base.sqlite.e.ExesTable;
+import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.ExesTypeTable;
+import thstdio.sportv1.logic.base.sqlite.t.TdayTable;
 
 /**
  * Created by shcherbakov on 08.06.2017.
@@ -59,12 +61,28 @@ public class SqliteBS extends MainBS {
         return cursor;
     }
 
+    private Cursor myMaxQuery(String tableName,String column ,String whereClause, String[] whereArgs) {
+
+        String maxCol[]={"Max("+column+") as id"};
+        Cursor cursor = mDatabase.query(
+                tableName,
+                maxCol, // Columns - null выбирает все столбцы
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                null // orderBy
+        );
+        int c = cursor.getCount();
+        return cursor;
+    }
+
     @Override
     public Eexes getEexes(int id) {
-        String myWhere = ExesTable.Cols.ID + " = ?";
+        String myWhere = EexesTable.Cols.ID + " = ?";
         String[] myArg = {new Integer(id).toString()};
 
-        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(ExesTable.TABLE_NAME, myWhere, myArg));
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EexesTable.TABLE_NAME, myWhere, myArg));
 
         try {
             cursor.moveToFirst();
@@ -81,17 +99,17 @@ public class SqliteBS extends MainBS {
 
     @Override
     public void setEexes(Eexes exes) {
-
-        ContentValues values = ExesTable.getContentValues(exes);
-        mDatabase.insert(ExesTable.TABLE_NAME, null, values);
-
+        if(getEexes(exes.getId())==null) {
+            ContentValues values = EexesTable.getContentValues(exes);
+            mDatabase.insert(EexesTable.TABLE_NAME, null, values);
+        }
     }
 
     @Override
     public void updateExes(Eexes exes) {
-        ContentValues values = ExesTable.getContentValues(exes);
-        mDatabase.update(ExesTable.TABLE_NAME, values,
-                ExesTable.Cols.ID + " = ?",
+        ContentValues values = EexesTable.getContentValues(exes);
+        mDatabase.update(EexesTable.TABLE_NAME, values,
+                EexesTable.Cols.ID + " = ?",
                 new String[]{new Integer(exes.getId()).toString()});
     }
 
@@ -258,11 +276,12 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public void setEday(Eday day) {
+        if(getEdayInfo(day.getIdProg(),day.getNumberOfDay())!=null) return;
         //Запись информации о дне
         ContentValues values = EdayTable.INFO.getContentValues(day);
         mDatabase.insert(EdayTable.INFO.TABLE_NAME, null, values);
         //поиск id созданого дня
-        day.setIdDay(getEdayInfo(day.getIdProg(), day.getNomberOfDay()).getIdDay());
+        day.setIdDay(getEdayInfo(day.getIdProg(), day.getNumberOfDay()).getIdDay());
         for (int i = 0; i < day.countOfExes(); i++) {
             setEexes(day.getEdayexes(i).getExes());
             day.getEdayexes(i).getPodhod().setId(setEpodhod(day.getEdayexes(i).getPodhod()));//попытка записи подхода в базу, если текущий подход есть то переписываем индификатор
@@ -316,6 +335,7 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public void setEprog(Eprog prog) {
+        if(getProgHelper(prog.getId())!=null) return;
         //Запись информации о  программе
         ContentValues values = EprogTable.INFO.getContentValues(prog);
         mDatabase.insert(EprogTable.INFO.TABLE_NAME, null, values);
@@ -363,11 +383,92 @@ public class SqliteBS extends MainBS {
     public void deleteEday(Eday day) {
 
         String myWhere = EdayTable.INFO.Cols.ID_PROG+" = ? AND "+ EdayTable.INFO.Cols.NUMBER_DAY+" = ?";
-        String[] myArg = {new Integer(day.getIdProg()).toString(),new Integer(day.getNomberOfDay()).toString()};
+        String[] myArg = {new Integer(day.getIdProg()).toString(),new Integer(day.getNumberOfDay()).toString()};
         mDatabase.delete(EdayTable.INFO.TABLE_NAME, myWhere, myArg);
         myWhere = EdayTable.Cols.ID_DAY+" = ?";
         myArg = new String[1];
         myArg[0]=new Integer(day.getIdDay()).toString();
         mDatabase.delete(EdayTable.TABLE_NAME, myWhere, myArg);
     }
+
+    /**
+     * @return int Возращает максимальный id для упражнения
+     */
+    @Override
+    public int getIdExesMax() {
+        String myWhere = null;
+        String[] myArg = null;
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myMaxQuery(EexesTable.TABLE_NAME,EexesTable.Cols.ID ,myWhere, myArg));
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int id = cursor.getId();
+                return id;
+            }
+        } finally {
+            cursor.close();
+        }
+        return 0;
+    }
+
+    /**
+     * вывод полного списка упражнений
+     *
+     * @return ывод полного списка упражнений
+     */
+    @Override
+    public List<Eexes> getAllExes() {
+        List<Eexes> list=new ArrayList<>();
+        String myWhere = null;
+        String[] myArg = null;
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EexesTable.TABLE_NAME, myWhere, myArg));
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Eexes exes = cursor.getEexes();
+                list.add(exes);
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return list;
+    }
+
+    /**
+     * @return int Возращает максимальный id для gпрограммы
+     */
+    @Override
+    public int getIdProgMax() {
+        String myWhere = null;
+        String[] myArg = null;
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myMaxQuery(EprogTable.INFO.TABLE_NAME,EprogTable.INFO.Cols.ID_PROG ,myWhere, myArg));
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int id = cursor.getId();
+                return id;
+            }
+        } finally {
+            cursor.close();
+        }
+        return 0;
+    }
+
+    /**
+     * Записывает в базу информацию он начале тренеровки
+     *
+     * @param day Передаем день тренеровки
+     */
+    @Override
+    public void startTday(Tday day) {
+        ContentValues values = TdayTable.getContentValues(day);
+        mDatabase.insert(TdayTable.TABLE_NAME, null, values);
+    }
+
 }

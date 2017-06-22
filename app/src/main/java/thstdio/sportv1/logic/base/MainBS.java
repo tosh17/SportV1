@@ -6,6 +6,7 @@ import thstdio.sportv1.logic.ETren.Eday;
 import thstdio.sportv1.logic.ETren.Eexes;
 import thstdio.sportv1.logic.ETren.Epodhod;
 import thstdio.sportv1.logic.ETren.Eprog;
+import thstdio.sportv1.logic.TTren.Tday;
 import thstdio.sportv1.logic.base.BaseInterface;
 
 /**
@@ -61,16 +62,23 @@ public class MainBS implements BaseInterface {
         return null;
     }
 
+    /**
+     * Поиск общей информации по дню
+     *
+     * @param idprog      int id Программы
+     * @param numberOfDay int id дня
+     * @return Eday  возращает день без упражнений
+     */
     @Override
     public Eday getEdayInfo(int idprog, int numberOfDay) {
         return null;
     }
 
     /**
-     * поиск дня по ид програмы и дня(номер дня с единицы)
+     * поиск упражнений дня по ид програмы и дня(номер дня с единицы)
      *
-     * @param idprog
-     * @param numberOfDay
+     * @param idprog      int id Программы
+     * @param numberOfDay int id дня
      * @return
      */
     @Override
@@ -81,8 +89,8 @@ public class MainBS implements BaseInterface {
     /**
      * поиск информации По програме
      *
-     * @param id
-     * @return
+     * @param id int
+     * @return Eprog
      */
     @Override
     public Eprog getEprogInfo(int id) {
@@ -133,7 +141,7 @@ public class MainBS implements BaseInterface {
     /**
      * запись базу дня тренеровки, для коллекции пустой метод
      *
-     * @param day
+     * @param day Eday
      */
     @Override
     public void setEday(Eday day) {
@@ -143,7 +151,7 @@ public class MainBS implements BaseInterface {
     /**
      * запись базу программы тренеровки, для коллекции пустой метод
      *
-     * @param prog
+     * @param prog Eprog
      */
     @Override
     public void setEprog(Eprog prog) {
@@ -152,10 +160,15 @@ public class MainBS implements BaseInterface {
 
     @Override
     public void addExes(Eexes exes) {
-             if(getEexes(exes.getId())==null) {setEexes(exes);}
-            else {updateExes(exes);}
-     }
+        if(getEexes(exes.getId())==null) {setEexes(exes);}
+        else {updateExes(exes);}
+    }
 
+    /**
+     * обнавление данных упражнения
+     *
+     * @param exes
+     */
     @Override
     public void updateExes(Eexes exes) {
 
@@ -164,8 +177,8 @@ public class MainBS implements BaseInterface {
     /**
      * поиск индекса подхода
      *
-     * @param podhod
-     * @return
+     * @param podhod Epodhod
+     * @return int
      */
     @Override
     public int findEpodhod(Epodhod podhod) {
@@ -179,8 +192,7 @@ public class MainBS implements BaseInterface {
      */
     @Override
     public void updateEday(Eday day) {
-        deleteEday(day);
-        setEday(day);
+
     }
 
     /**
@@ -191,6 +203,96 @@ public class MainBS implements BaseInterface {
     @Override
     public void deleteEday(Eday day) {
 
+    }
+
+    /**
+     * @return int Возращает максимальный id для упражнения
+     */
+    @Override
+    public int getIdExesMax() {
+        return 0;
+    }
+
+    /**
+     * вывод полного списка упражнений
+     *
+     * @return ывод полного списка упражнений
+     */
+    @Override
+    public List<Eexes> getAllExes() {
+        return null;
+    }
+
+    /**
+     * @return int Возращает максимальный id для gпрограммы
+     */
+    @Override
+    public int getIdProgMax() {
+        return 0;
+    }
+
+    /**
+     * Записывает в базу информацию он начале тренеровки
+     *
+     * @param day Передаем день тренеровки
+     */
+    @Override
+    public void startTday(Tday day) {
+
+    }
+
+    /**
+     * Завершаем тренеровку Записываем время оканчания
+     *
+     * @param day     Передаем день тренеровки
+     * @param endTime Время окончания
+     */
+    @Override
+    public void endTday(Tday day, int endTime) {
+
+    }
+
+    /**
+     * Поиск не завершенного дня
+     *
+     * @return Возращает тренеровочный день
+     */
+    @Override
+    public Tday findNotEndTday() {
+        return null;
+    }
+
+    /**
+     * Запись выполненого подхода в базу
+     *
+     * @param tExesValues упорядочный массив данных(порядок согластно полям таблицы)
+     */
+    @Override
+    public void setTexesPodhod(long[] tExesValues) {
+
+    }
+
+    /**
+     * вспомогательная функция для востоновления тренеровочного дня
+     *
+     * @param idTday номер тренеровочного дня в базе
+     * @param idExes номер упражнения
+     * @return упорядочный массив данных(порядок согластно полям таблицы)
+     */
+    @Override
+    public int[] loadTexes(int idTday, int idExes) {
+        return new int[0];
+    }
+
+    /**
+     * Запись показаний измерений в базу
+     *
+     * @param date  время
+     * @param type  тип
+     * @param value значение
+     */
+    @Override
+    public void setMeasure(int date, int type, int value) {
 
     }
 }

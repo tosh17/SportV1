@@ -62,7 +62,7 @@ public class EProgListFragment extends Fragment {
             mExesTextView = (TextView) itemView.findViewById(R.id.textViewList);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
 
-            mExesTextView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         public void bindHolder(int position, String prog) {

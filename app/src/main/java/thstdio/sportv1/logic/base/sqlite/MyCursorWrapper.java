@@ -10,11 +10,10 @@ import java.util.List;
 import thstdio.sportv1.logic.ETren.Eday;
 import thstdio.sportv1.logic.ETren.Eexes;
 import thstdio.sportv1.logic.ETren.Epodhod;
-import thstdio.sportv1.logic.ETren.Eprog;
 import thstdio.sportv1.logic.base.sqlite.e.EdayTable;
 import thstdio.sportv1.logic.base.sqlite.e.EpodhodTable;
 import thstdio.sportv1.logic.base.sqlite.e.EprogTable;
-import thstdio.sportv1.logic.base.sqlite.e.ExesTable;
+import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.ExesTypeTable;
 
 /**
@@ -31,9 +30,9 @@ public class MyCursorWrapper extends CursorWrapper {
         super(cursor);
     }
     public Eexes getEexes() {
-        int id = getInt(getColumnIndex(ExesTable.Cols.ID));
-        String name = getString(getColumnIndex(ExesTable.Cols.NAME));
-        int isSolved = getInt(getColumnIndex(ExesTable.Cols.FREE_WEIGHT));
+        int id = getInt(getColumnIndex(EexesTable.Cols.ID));
+        String name = getString(getColumnIndex(EexesTable.Cols.NAME));
+        int isSolved = getInt(getColumnIndex(EexesTable.Cols.FREE_WEIGHT));
         Eexes exes=new Eexes(id,name);
         exes.setFreeWeight(isSolved==0 ? false : true);
         return exes;
@@ -84,5 +83,10 @@ public class MyCursorWrapper extends CursorWrapper {
         int place=getInt(getColumnIndex(EprogTable.INFO.Cols.PLACE));
         list.add(place);
         return list;
+    }
+
+    public int getId() {
+        int id = getInt(getColumnIndex("id"));
+        return id;
     }
 }

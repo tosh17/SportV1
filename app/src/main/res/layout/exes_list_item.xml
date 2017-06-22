@@ -7,9 +7,10 @@
     android:orientation="vertical"
     android:divider="@drawable/separator"
     android:dividerPadding="10dp"
-    android:background="@color/LigthGreen500">
+    >
 
     <LinearLayout
+        android:id="@+id/lineExesList"
         style="@style/ListExes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,15 +40,15 @@
 
         <TextView
             android:id="@+id/textViewListExes"
-            style="@style/ListExes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:layout_marginEnd="5dp"
+            android:paddingStart="20dp"
             android:layout_weight="20"
             android:text="Разминка"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorPGrey"
             android:textSize="@dimen/list_test_size"
             android:textStyle="bold" />
 

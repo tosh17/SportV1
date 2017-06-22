@@ -18,11 +18,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import thstdio.sportv1.R;
-
 import thstdio.sportv1.display.abstract_package.MyAsset;
 import thstdio.sportv1.display.settings_activiti.SettingListExes;
 import thstdio.sportv1.logic.ETren.Eday;
@@ -34,23 +34,27 @@ import thstdio.sportv1.logic.base.BaseLab;
  * Created by shcherbakov on 03.06.2017.
  */
 
-public class EdayPageFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class EdayPageFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, EdayPage.Callbacks {
     private static final String PROG_ID = "prog_id";
     private static final String DAY_ID = "day_id";
 
     public MyAsset myAsset;
     SharedPreferences prefs;
     BaseInterface bs;
+    EdayPage activity;
 
-    private int setting_text_size=14;
-    private int setting_icon_size=144;
+    private int setting_text_size = 14;
+    private int setting_icon_size = 144;
     Eday day;
 
-    private boolean isSelect=false;
+    private boolean isSelect = false;
     public static boolean selectItem[];
-    public static int countSelect=0;
+    public static int countSelect = 0;
 
-    public static EdayPageFragment newInstance(int idProg,int position) {
+    private Menu mMenu;
+
+
+    public static EdayPageFragment newInstance(int idProg, int position) {
         Bundle args = new Bundle();
         args.putSerializable(DAY_ID, position);
         args.putSerializable(PROG_ID, idProg);
@@ -62,42 +66,49 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
 
     EdayPageFragment.Adapter adapter;
     RecyclerView mExesRecyclerView;
-    int idProg,idDay;
+    int idProg, idDay;
 
-     @Override
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-          bs= BaseLab.getBS(getContext());
+        bs = BaseLab.getBS(getContext());
+        activity = (EdayPage) getActivity();
+        activity.fabChangeImage(0);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-          myAsset=new MyAsset(getContext());
+        myAsset = new MyAsset(getContext());
 
         View v = inflater.inflate(R.layout.activity_recycler_view, container, false);
         mExesRecyclerView = (RecyclerView) v
                 .findViewById(R.id.activity_recycler_view);
         mExesRecyclerView.setLayoutManager(new LinearLayoutManager
                 (getActivity()));
-          if (getArguments() != null) {
-              idProg = getArguments().getInt(PROG_ID);
-              idDay = getArguments().getInt(DAY_ID);
-          }
-          prefs =
-                  PreferenceManager.getDefaultSharedPreferences(getContext());
-          prefs.registerOnSharedPreferenceChangeListener(this);
+        if (getArguments() != null) {
+            idProg = getArguments().getInt(PROG_ID);
+            idDay = getArguments().getInt(DAY_ID);
+        }
+        prefs =
+                PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
-        BaseInterface bs= BaseLab.getBS(getContext());
+        BaseInterface bs = BaseLab.getBS(getContext());
         UpdateSetting(prefs);
 
         return v;
     }
 
     private void updateUI() {
+        if (activity != null) {
+            changeTab(activity.currentPage());
+        }
+        day = bs.getEday(idProg, idDay + 1);
 
-        day = bs.getEday(idProg,idDay+1);
         List<Eday.EdayList> list = day.getList();
         selectItem = new boolean[list.size()];
         if (adapter == null) {
@@ -122,46 +133,59 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         UpdateSetting(sharedPreferences);
     }
-    private void UpdateSetting(SharedPreferences prefs){
 
-        String str=prefs.getString("list_exes_icon_size","default");
+    private void UpdateSetting(SharedPreferences prefs) {
 
-     //Размер иконок
-        if(str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item1))){
-            setting_icon_size= (int) ( 144*1.25);
-        }
-        else if(str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item2)))
-        {
-            setting_icon_size=144;
-        }
-        else if(str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item3)))
-        {
-            setting_icon_size= (int) ( 144*0.75);
-        }
-        else if(str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item4)))
-        {
-            setting_icon_size= 0;
+        String str = prefs.getString("list_exes_icon_size", "default");
+
+        //Размер иконок
+        if (str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item1))) {
+            setting_icon_size = (int) (144 * 1.25);
+        } else if (str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item2))) {
+            setting_icon_size = 144;
+        } else if (str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item3))) {
+            setting_icon_size = (int) (144 * 0.75);
+        } else if (str.equals(getResources().getString(R.string.setting_exes_list_icon_size_item4))) {
+            setting_icon_size = 0;
         }
         //Размер шрифта
-        str=prefs.getString("list_exes_text_size","default");
-        if(str.equals(getResources().getString(R.string.setting_exes_list_text_size_item1))){
-            setting_text_size= 18;
-        }
-        else if(str.equals(getResources().getString(R.string.setting_exes_list_text_size_item2)))
-        {
-            setting_text_size=16;
-        }
-        else if(str.equals(getResources().getString(R.string.setting_exes_list_text_size_item3)))
-        {
-            setting_text_size= 14;
+        str = prefs.getString("list_exes_text_size", "default");
+        if (str.equals(getResources().getString(R.string.setting_exes_list_text_size_item1))) {
+            setting_text_size = 18;
+        } else if (str.equals(getResources().getString(R.string.setting_exes_list_text_size_item2))) {
+            setting_text_size = 16;
+        } else if (str.equals(getResources().getString(R.string.setting_exes_list_text_size_item3))) {
+            setting_text_size = 14;
         }
 
-        myAsset.setStyleIcon(prefs.getString("list_exes_icon_style","default"));
+        myAsset.setStyleIcon(prefs.getString("list_exes_icon_style", "default"));
         updateUI();
     }
 
+    //callback
+
+    public void addDayExes() {
+
+        Intent intent = EexesAddActivity.newIntent(getContext(), day.getIdProg(), day.getNumberOfDay());
+        startActivity(intent);
+    }
+
+    @Override
+    public void clickFab() {
+        if (isSelect)  addDayExes();
+    }
+
+    @Override
+    public void changeTab(int numberTab) {
+        Eday tDay = bs.getEday(idProg, numberTab + 1);
+        activity.getSupportActionBar().setSubtitle(tDay.getDescription());
+
+
+    }
+
+
     //Holder
-    private class Holder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class Holder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
         public TextView mExesTextView;
         public ImageView mImageView;
@@ -171,18 +195,18 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
         public Holder(View itemView) {
             super(itemView);
             mExesTextView = (TextView) itemView.findViewById(R.id.textViewListExes);
-            mImageView=(ImageView) itemView.findViewById(R.id.imageViewExes);
-            mCheckBox=(CheckBox)itemView.findViewById(R.id.checkBoxExes);
+            mImageView = (ImageView) itemView.findViewById(R.id.imageViewExes);
+            mCheckBox = (CheckBox) itemView.findViewById(R.id.checkBoxExes);
             mCheckBox.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         public void bindHolder(int position, Eday.EdayList exes) {
-            Drawable d= myAsset.getIcon(exes.getExes().getId());
+            Drawable d = myAsset.getIcon(exes.getExes().getId());
             mImageView.setImageDrawable(d);
-            if(setting_icon_size==0){
+            if (setting_icon_size == 0) {
                 mImageView.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 mImageView.setVisibility(View.VISIBLE);
                 mImageView.setMinimumWidth((int) (setting_icon_size * getResources().getDisplayMetrics().density));
                 mImageView.setMinimumHeight((int) (setting_icon_size * getResources().getDisplayMetrics().density));
@@ -190,14 +214,17 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
 
 
             mExesTextView.setText("#" + (position + 1) + "  " + exes.getExes().getName());
-            mExesTextView.append( System.lineSeparator() + exes.getPodhod().toString());
-          //  mExesTextView.append( System.lineSeparator() + exes.getPodhod().toStringDetail());
+            mExesTextView.append(System.lineSeparator() + exes.getPodhod().toString());
+            //  mExesTextView.append( System.lineSeparator() + exes.getPodhod().toStringDetail());
             mExesTextView.setTextSize(setting_text_size);
 
-            if(isSelect) {mCheckBox.setVisibility(View.VISIBLE);}
-            else { mCheckBox.setVisibility(View.GONE);}
+            if (isSelect) {
+                mCheckBox.setVisibility(View.VISIBLE);
+            } else {
+                mCheckBox.setVisibility(View.GONE);
+            }
 
-             this.position = position;
+            this.position = position;
 
         }
 
@@ -209,8 +236,22 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
         @Override
         public void onClick(View v) {
             selectItem[position] = mCheckBox.isChecked();
-            countSelect+=mCheckBox.isChecked()?1:-1;
+            countSelect += mCheckBox.isChecked() ? 1 : -1;
 
+        }
+
+        /**
+         * Called when a view has been clicked and held.
+         *
+         * @param v The view that was clicked and held.
+         * @return true if the callback consumed the long click, false otherwise.
+         */
+        @Override
+        public boolean onLongClick(View v) {
+            Toast toast = Toast.makeText(getContext(),
+                    "Хорошь уже", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
         }
 
         /**
@@ -218,7 +259,7 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
          *
          * @param v The view that was clicked.
          */
-      }
+    }
 
 
     // Adapter
@@ -253,13 +294,19 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_exes_list, menu);
+        inflater.inflate(R.menu.menu_eday_page, menu);
+        mMenu = menu;
+        menu.findItem(R.id.action_delete).setVisible(false);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_delete).setVisible(isSelect);
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -270,21 +317,25 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent=new Intent(getContext(), SettingListExes.class);
+            Intent intent = new Intent(getContext(), SettingListExes.class);
             startActivity(intent);
-        }
-        else if(id == R.id.action_sellect) {
-             isSelect=!isSelect;
-             updateUI();
-        }
-        else if(id == R.id.action_delete) {
-            int delId[]=new int[countSelect];
-            int idMass=0;
-            for(int i=0;i<selectItem.length;i++){
-                if(selectItem[i]) delId[idMass++]=i;
+        } else if (id == R.id.action_sellect) {
+            isSelect = !isSelect;
+            if (isSelect) {
+                activity.fabChangeImage(1);
+            } else {
+                activity.fabChangeImage(0);
+            }
+            onPrepareOptionsMenu(mMenu);
+            updateUI();
+        } else if (id == R.id.action_delete) {
+            int delId[] = new int[countSelect];
+            int idMass = 0;
+            for (int i = 0; i < selectItem.length; i++) {
+                if (selectItem[i]) delId[idMass++] = i;
             }
             day.del(delId);
-            isSelect=false;
+            isSelect = false;
             bs.updateEday(day);
             adapter = null;
             updateUI();
@@ -296,6 +347,8 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
     @Override
     public void onResume() {
         super.onResume();
+        adapter = null;
         updateUI();
     }
+
 }
