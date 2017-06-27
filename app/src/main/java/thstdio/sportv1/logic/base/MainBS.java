@@ -192,7 +192,8 @@ public class MainBS implements BaseInterface {
      */
     @Override
     public void updateEday(Eday day) {
-
+             deleteEday(day);
+          setEday(day);
     }
 
     /**
@@ -248,7 +249,7 @@ public class MainBS implements BaseInterface {
      * @param endTime Время окончания
      */
     @Override
-    public void endTday(Tday day, int endTime) {
+    public void endTday(Tday day, long endTime) {
 
     }
 
@@ -294,5 +295,20 @@ public class MainBS implements BaseInterface {
     @Override
     public void setMeasure(int date, int type, int value) {
 
+    }
+
+    @Override
+    public int[][] getTdayStat(long idTday) {
+        return new int[0][];
+    }
+
+    /**
+     * Возращает массив для заполнение инфы о тренеровочном дне
+     *
+     * @return {IdDay,ProgName,DayName,TotalTime}
+     */
+    @Override
+    public List<String[]> getStatList() {
+        return null;
     }
 }

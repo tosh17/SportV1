@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -32,6 +31,7 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
     private static final String EXES_ID ="exes_id" ;
     StartAvtivty activity;
     BaseInterface bs;
+    int tempC=-1,tempW=-1;
     public static StartPageFragment newInstance(int position) {
         Bundle args = new Bundle();
         args.putSerializable(EXES_ID, position);
@@ -50,7 +50,8 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
     private static final String ARG_ID = "exes_id";
     int REQUEST_DIALOG=0;
     int currentExes =0;
-    int exesTime,exesTimeStart ;
+    int exesTime;
+    long tDayId;
 
 
 
@@ -152,7 +153,7 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
                 i = 5;
                 break;
         }
-        if (!isChecked) {
+      /*  if (!isChecked) {
             changeFon(i,R.color.colorPGrey);
 
         }
@@ -161,10 +162,12 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
             if(i>currentExes) {idCollor=R.color.colorPRed;}
             else{idCollor=R.color.colorPYellow;}
             changeFon(i,idCollor);
-            }
+            } */
         exesCase[i].setEnabled(isChecked);
         tExes.disExes(i,!isChecked);
         if(tExes.isDone()) done();
+        else restoration();
+
     }
 
     /**
@@ -180,7 +183,7 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
                 chronometer.setTextColor(Color.GREEN);
-                exesTimeStart= (int) activity.getTday().getId();
+                tDayId = activity.getTday().getId();
 
             } else {
                 isChronometr = !isChronometr;
@@ -190,10 +193,8 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
                 chronometer.start();
                 chronometer.setTextColor(Color.RED);
                 changeFon(currentExes,R.color.colorPGreen);
-                FragmentManager manager = getFragmentManager();
-                StartFragmentDialog dialog = StartFragmentDialog.newInstance();
-                dialog.setTargetFragment(StartPageFragment.this,REQUEST_DIALOG);
-                dialog.show(manager, "");
+
+                createDialog(tempC,tempW);
                 swExes[currentExes].setVisibility(View.GONE);
 
 
@@ -201,18 +202,30 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
         }
     }
 
+    private void createDialog(int c,int w) {
+        FragmentManager manager = getFragmentManager();
+        StartFragmentDialog dialog = StartFragmentDialog.newInstance(c,w);
+        dialog.setTargetFragment(StartPageFragment.this,REQUEST_DIALOG);
+        dialog.show(manager, "");
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == Activity.RESULT_CANCELED) {createDialog(tempC,tempW);;return;}
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
         if (requestCode == REQUEST_DIALOG) {
             int[] iCW =  data.getIntArrayExtra(StartFragmentDialog.SEND_EXES);
 
+            tExes.addExex(iCW[0],iCW[1],exesTime);
+            tempC=iCW[0];
+            tempW=iCW[1];
             BaseInterface bs= BaseLab.getBS(getContext());
-            tExes.addExex(iCW[0],iCW[1],exesTime );
-            update(iCW);
+            bs.setTexesPodhod(getCurrentVal(currentExes));
+
+            update(currentExes,iCW);
             if(tExes.isDone()) done();
             else {
                 currentExes++;
@@ -222,8 +235,8 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
         }
     }
 
-    private void update(int[] iCW) {
-        textView[currentExes].append(" /"+iCW[0]+"x"+iCW[1]);
+    private void update(int position,int[] iCW) {
+    textView[position].append(" /"+iCW[0]+"x"+iCW[1]);
     }
 
     /**
@@ -231,29 +244,31 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
      * @return
      */
 
-    public long[] getCurrentVal() {
-        long[] currentVal=new long[7];
-        currentVal[0]=exesTimeStart;   //id TDAy
+    public long[] getCurrentVal(int position) {
+        long[] currentVal=new long[9];
+        currentVal[0]= tDayId;   //id TDAy
         currentVal[1]=DateLab.now();               //TIME_START
-        // ID_EXES
-        //NUMBER_PODHOD
-        currentVal[2]=tExes.getExesType()?1:0;        //TYPE
-        currentVal[3]=tExes.getPodhoVal(currentExes)[0];        //COUNT
-        currentVal[4]=tExes.getPodhoVal(currentExes)[1];        //WEIGHT
-        currentVal[6]=tExes.getPodhoVal(currentExes)[2];        //TIMER
+        currentVal[2]=tExes.getExes().getId();// ID_EXES
+        currentVal[3]=position;//NUMBER_PODHOD
+        currentVal[4]=tExes.getExesType()?1:0;        //TYPE
+        currentVal[5]=tExes.getPodhoVal(position)[0];        //COUNT
+        currentVal[6]=tExes.getPodhoVal(position)[1];        //WEIGHT
+
+        currentVal[8]=tExes.getPodhoVal(position)[2];        //TIMER
         if(tExes.getExes().isFreeWeight() ) {
-            currentVal[5]=0;
+            currentVal[7]=0;
         }
         else{
-            currentVal[5]=0;
+            currentVal[7]=0;
         }
         return currentVal;
     }
     private void done(){
-        Toast toast = Toast.makeText(getContext(),
-                "Закончили", Toast.LENGTH_SHORT);
-        toast.show();
         chronometer.setVisibility(View.GONE);
+        for(int i=0;i<tExes.size();i++){
+            if(tExes.isExesDis(i)) bs.setTexesPodhod(getCurrentVal(i));
+        }
+        activity.exesDone();
     }
     private void changeFon(int i,int idColor){
         exesCase[i].setBackgroundColor(getResources().getColor(idColor));
@@ -274,18 +289,23 @@ public class StartPageFragment extends Fragment implements  CompoundButton.OnChe
      */
     private void restoration() {
         for(int i=0;i<tExes.size();i++){
-            currentExes=0;
+
             int[] val=tExes.getPodhoVal(i);
             if (val[0]>-1) {
                 changeFon(i,R.color.colorPGreen);
-                update(val);
+                update(i,val);
                 swExes[i].setVisibility(View.GONE);
                            }
+               else {changeFon(i,R.color.colorPRed);}
             if(tExes.isExesDis(i)) {
                 swExes[i].setChecked(false);
                 changeFon(i,R.color.colorPGrey);
             }
+                }
 
-        }
+        currentExes=-1;
+        while(tExes.getPodhoVal(++currentExes)[0]!=-2){
+                    }
+        changeFon(currentExes,R.color.colorPYellow);
     }
 }

@@ -14,8 +14,7 @@ import thstdio.sportv1.logic.TTren.Tday;
 import thstdio.sportv1.logic.TTren.Texes;
 import thstdio.sportv1.logic.base.BaseInterface;
 import thstdio.sportv1.logic.base.BaseLab;
-
-import static thstdio.sportv1.R.id.spinner;
+import thstdio.sportv1.logic.date.DateLab;
 
 
 /**
@@ -26,7 +25,8 @@ public class StartAvtivty extends AbstractNavigationPageActivity {
     private static final String EXTRA_ID = "id_prog";
 
     Tday tDay;
-
+    BaseInterface bs;
+    int idProg,numberDay;
     @Override
     protected int getNumberPage() {
         return Tday.getTday().size();
@@ -39,22 +39,25 @@ public class StartAvtivty extends AbstractNavigationPageActivity {
 
     @Override
     public void init() {
-        BaseInterface bs= BaseLab.getBS(getApplicationContext());
-        int idProg=getIntent().getIntExtra(EXTRA_ID,0);
-        if(idProg==0) idProg=lastId();
-        Eday day=bs.getEday(idProg,1);
-        tDay =Tday.getnewTday(day);
-        bs.startTday(tDay);
+        bs = BaseLab.getBS(getApplicationContext());
+        tDay = bs.findNotEndTday();
+        if (tDay == null) {
+            idProg = getIntent().getIntExtra(EXTRA_ID, 0);
+            lastId();
+            Eday day = bs.getEday(idProg, numberDay);
+            tDay = Tday.getnewTday(day);
+            bs.startTday(tDay);
+        }
     }
 
     @Override
     public void initAfterNavigation() {
 
         spinnerVsTablayout(true);
-        String[] strSpiner=new String[tDay.size()];
-        for(int i=0;i<tDay.size();i++) strSpiner[i]= tDay.getTexes(i).getExes().getName();
+        String[] strSpiner = new String[tDay.size()];
+        for (int i = 0; i < tDay.size(); i++) strSpiner[i] = tDay.getTexes(i).getExes().getName();
         // Настраиваем адаптер
-        ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.spiner,R.id.textViewSpiner,strSpiner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spiner, R.id.textViewSpiner, strSpiner);
 
 // Вызываем адаптер
         toolSpinner.setAdapter(adapter);
@@ -65,25 +68,27 @@ public class StartAvtivty extends AbstractNavigationPageActivity {
                 mViewPager.setCurrentItem(selectedItemPosition);
 
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
 
 
-    private int lastId() {
-        return 1;
+    private void lastId() {
+        idProg=1;
+        numberDay=1;
     }
 
     @Override
     protected CharSequence getMyTitle(int position) {
-        return "Ex"+(position+1);
+        return "Ex" + (position + 1);
     }
 
     @Override
     protected void tabSelect(int idTab) {
-        if(toolSpinner!=null)
-        toolSpinner.setSelection(idTab);
+        if (toolSpinner != null)
+            toolSpinner.setSelection(idTab);
 
     }
 
@@ -91,15 +96,34 @@ public class StartAvtivty extends AbstractNavigationPageActivity {
     protected void fabOnClic() {
 
     }
+
     public static Intent newIntent(Context packageContext, int idProg) {
         Intent intent = new Intent(packageContext, StartAvtivty.class);
         intent.putExtra(EXTRA_ID, idProg);
         return intent;
     }
-    public Texes getTexes(int position){
+
+    public Texes getTexes(int position) {
         return tDay.getTexes(position);
     }
-    public Tday getTday()  {
+
+    public Tday getTday() {
         return tDay;
+    }
+
+    public void exesDone() {
+        if (tDay.iSDayDone()) {
+            bs.endTday(tDay, DateLab.now());
+            Intent intent = DayStatistic.newIntent(getApplicationContext(), tDay.getId());
+            finish();
+            startActivity(intent);
+
+        }
+        int i = 0;
+        while (tDay.getTexes(i).isDone()) {
+            if (i < tDay.size() - 1) i++;
+            else break;
+        }
+        mViewPager.setCurrentItem(i);
     }
 }

@@ -23,7 +23,7 @@ import thstdio.sportv1.R;
 
 public abstract class SinglePageFragmentActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FloatingActionButton fab;
+    protected FloatingActionButton fab;
     protected ViewPager mViewPager;
     protected TabLayout tabLayout;
     protected Spinner toolSpinner;

@@ -15,6 +15,9 @@ import thstdio.sportv1.logic.base.sqlite.e.EpodhodTable;
 import thstdio.sportv1.logic.base.sqlite.e.EprogTable;
 import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.ExesTypeTable;
+import thstdio.sportv1.logic.base.sqlite.t.TdayTable;
+import thstdio.sportv1.logic.base.sqlite.t.TexesTable;
+import thstdio.sportv1.logic.date.DateLab;
 
 /**
  * Created by shcherbakov on 09.06.2017.
@@ -88,5 +91,31 @@ public class MyCursorWrapper extends CursorWrapper {
     public int getId() {
         int id = getInt(getColumnIndex("id"));
         return id;
+    }
+
+    public int[] getTdayStat() {
+        int[] tdayStat=new int[8];
+        long t1=getLong(getColumnIndex(TexesTable.Cols.ID_T_DAY));
+        long t2=getLong(getColumnIndex(TexesTable.Cols.TIME_START));
+        tdayStat[0]= (int) (t2-t1)/1000;
+        tdayStat[1]=getInt(getColumnIndex(TexesTable.Cols.ID_EXES));
+        tdayStat[2]=getInt(getColumnIndex(TexesTable.Cols.NUMBER_PODHOD));
+        tdayStat[3]=getInt(getColumnIndex(TexesTable.Cols.TYPE));
+        tdayStat[4]=getInt(getColumnIndex(TexesTable.Cols.COUNT));
+        tdayStat[5]=getInt(getColumnIndex(TexesTable.Cols.WEIGHT));
+        tdayStat[6]=getInt(getColumnIndex(TexesTable.Cols.WEIGHT));
+        tdayStat[7]=getInt(getColumnIndex(TexesTable.Cols.TIMER));
+
+
+        return tdayStat;
+    }
+
+    public String[] getTdayStatInfo() {
+        String[] str = new String[4];
+        str[0]=getString(getColumnIndex(TdayTable.Cols.DATE));
+        str[1]=getString(getColumnIndex(TdayTable.Cols.ID_PROG));
+        str[2]=getString(getColumnIndex(TdayTable.Cols.NUMBER_DAY));
+        str[3]=DateLab.parseSecondt((int) (getLong(getColumnIndex(TdayTable.Cols.TIME_END))-getLong(getColumnIndex(TdayTable.Cols.DATE)))/1000,":");
+       return str;
     }
 }

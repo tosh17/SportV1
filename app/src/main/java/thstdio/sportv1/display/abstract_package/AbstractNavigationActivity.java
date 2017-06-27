@@ -12,7 +12,9 @@ import android.view.MenuItem;
 
 import thstdio.sportv1.R;
 import thstdio.sportv1.display.my_trener_activiti.EProgListActivity;
+import thstdio.sportv1.display.start_activity.DayStatistic;
 import thstdio.sportv1.display.start_activity.StartAvtivty;
+import thstdio.sportv1.display.statistic_activity.StatisticListActivity;
 
 public abstract class AbstractNavigationActivity extends SingleFragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,6 +72,8 @@ public abstract class AbstractNavigationActivity extends SingleFragmentActivity
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_statistic) {
+            intent  = new Intent(this, StatisticListActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_mesuare) {
 

@@ -1,5 +1,6 @@
 package thstdio.sportv1.logic.base.sqlite.t;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -18,7 +19,7 @@ public class TexesTable {
         public static final String COUNT  = "count";
         public static final String WEIGHT = "weight";
         public static final String WEIGHT_PLUS = "weight_plus";
-        public static final String TIMER = "weight_plus";
+        public static final String TIMER = "timer";
     }
 
     public static void createTable(SQLiteDatabase db) {
@@ -35,5 +36,18 @@ public class TexesTable {
                 Cols.TIMER + " integer" +
                 ")");
 
+    }
+    public static ContentValues getContentValues(long[] val) {
+        ContentValues values = new ContentValues();
+        values.put(Cols.ID_T_DAY,val[0]);
+        values.put(Cols.TIME_START, val[1]);
+        values.put(Cols.ID_EXES, val[2]);
+        values.put(Cols.NUMBER_PODHOD, val[3]);
+        values.put(Cols.TYPE, val[4]);
+        values.put(Cols.COUNT, val[5]);
+        values.put(Cols.WEIGHT, val[6]);
+        values.put(Cols.WEIGHT_PLUS, val[7]);
+        values.put(Cols.TIMER, val[8]);
+        return values;
     }
 }

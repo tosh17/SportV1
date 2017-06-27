@@ -27,6 +27,8 @@ public class Tday {
         if (tday == null) {
             tday = new Tday(day);
             tday.setId(DateLab.now());
+            long temp=tday.getId();
+            temp=temp+1;
         }
 
         return tday;

@@ -59,6 +59,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
         fab.setOnClickListener(this);
 
         init();
+
     }
 
     public void upHome(boolean enable){

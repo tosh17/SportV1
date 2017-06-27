@@ -38,4 +38,9 @@ public class TdayTable {
         values.put(Cols.TIME_END, -1);
         return values;
     }
+    public static ContentValues getContentToEndValues(long end) {
+        ContentValues values = new ContentValues();
+        values.put(Cols.TIME_END, end);
+        return values;
+    }
 }

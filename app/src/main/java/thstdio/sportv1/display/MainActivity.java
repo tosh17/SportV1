@@ -42,6 +42,7 @@ public class MainActivity extends AbstractNavigationActivity {
         if(str.equals("yes")){
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("first_start", "no");
+            editor.commit();
             BaseInterface bs1 = SqliteBS.getInstance(getApplicationContext());
             BaseInterface bs2 = new CollectionBS();
             Eprog prog=bs2.getEprog(1);

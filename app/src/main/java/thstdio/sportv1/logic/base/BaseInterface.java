@@ -154,7 +154,7 @@ public interface BaseInterface {
      * @param day Передаем день тренеровки
      * @param endTime Время окончания
      */
-    public void endTday(Tday day,int endTime);
+    public void endTday(Tday day,long endTime);
 
     /**
      * Поиск не завершенного дня
@@ -183,4 +183,11 @@ public interface BaseInterface {
      * @param value  значение
      */
      public void setMeasure(int date,int type,int value);
+    public int[][] getTdayStat(long idTday);
+
+    /**
+     * Возращает массив для заполнение инфы о тренеровочном дне
+      * @return {IdDay,ProgName,DayName,TotalTime}
+     */
+    List<String[]> getStatList();
 }

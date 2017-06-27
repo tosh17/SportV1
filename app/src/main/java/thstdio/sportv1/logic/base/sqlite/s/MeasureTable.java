@@ -25,14 +25,18 @@ public class MeasureTable {
     public static final String TABLE_NAME = "mesuare";
 
     public final class Cols {
-        public static final String DATE = "date";
+        public static final String DAY = "day";
+        public static final String MONTH = "month";
+        public static final String YEARS = "year";
         public static final String TYPE = "type";
         public static final String VALUE = "value";
     }
     public static void createTable(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME + "(" +
                 " _id integer primary key autoincrement, " +
-                Cols.DATE + " LARGEINT, " +
+                Cols.DAY + " int, " +
+                Cols.MONTH + " integer, " +
+                Cols.YEARS + " integer, " +
                 Cols.TYPE + " integer, " +
                 Cols.VALUE + " integer" +
                 ")");

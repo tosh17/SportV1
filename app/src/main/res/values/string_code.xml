@@ -6,4 +6,17 @@
     <string name="warning_exes_add_min_limit">Не создано ни одного подхода</string>
     <string name="warning_exes_search">Вы можете выбрать только одно упражнение</string>
     <string name="warning_eprog_add_max_limit">Максимальное количество дней</string>
+
+    <string name="day_statistic_lable_0">Общая статистика по времени</string>
+    <string name="day_statistic_lable_1">Общее время тренеровки</string>
+    <string name="day_statistic_lable_2">Упражнения</string>
+    <string name="day_statistic_lable_3">Отдых между упражнениями</string>
+    <string name="day_statistic_lable_4">Отдых между подходами</string>
+
+    <string name="day_statistic_lable_exes_0">Общая статистика по упражнения</string>
+    <string name="day_statistic_lable_exes_1">Max</string>
+    <string name="day_statistic_lable_exes_2">Avg</string>
+    <string name="day_statistic_lable_exes_3">Min</string>
+    <string name="day_statistic_lable_exes_4">Sellect</string>
+
 </resources>

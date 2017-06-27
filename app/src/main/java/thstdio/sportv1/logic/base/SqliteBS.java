@@ -21,6 +21,7 @@ import thstdio.sportv1.logic.base.sqlite.e.EprogTable;
 import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.ExesTypeTable;
 import thstdio.sportv1.logic.base.sqlite.t.TdayTable;
+import thstdio.sportv1.logic.base.sqlite.t.TexesTable;
 
 /**
  * Created by shcherbakov on 08.06.2017.
@@ -471,4 +472,80 @@ public class SqliteBS extends MainBS {
         mDatabase.insert(TdayTable.TABLE_NAME, null, values);
     }
 
+    /**
+     * Завершаем тренеровку Записываем время оканчания
+     *
+     * @param day     Передаем день тренеровки
+     * @param endTime Время окончания
+     */
+    @Override
+    public void endTday(Tday day, long endTime) {
+        ContentValues values = TdayTable.getContentToEndValues(endTime);
+        mDatabase.update(TdayTable.TABLE_NAME, values,
+                TdayTable.Cols.DATE + " = ?",
+                new String[]{new Long(day.getId()).toString()});
+    }
+
+    /**
+     * Запись выполненого подхода в базу
+     *
+     * @param tExesValues упорядочный массив данных(порядок согластно полям таблицы)
+     */
+    @Override
+    public void setTexesPodhod(long[] tExesValues) {
+        ContentValues values = TexesTable.getContentValues(tExesValues);
+        mDatabase.insert(TexesTable.TABLE_NAME, null, values);
+    }
+
+    @Override
+    public int[][] getTdayStat(long idTday) {
+         int[][]resTable;
+        String myWhere = TexesTable.Cols.ID_T_DAY + " = ?";
+        String[] myArg = {new Long(idTday).toString()};
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TexesTable.TABLE_NAME, myWhere, myArg));
+
+        try {
+           resTable=new int[cursor.getCount()][8];
+            cursor.moveToFirst();
+            int i=0;
+            while (!cursor.isAfterLast()) {
+               resTable[i++]= cursor.getTdayStat();
+
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return resTable;
+    }
+
+    /**
+     * Возращает массив для заполнение инфы о тренеровочном дне
+     *
+     * @return {IdDay,ProgName,DayName,TotalTime}
+     */
+    @Override
+    public List<String[]> getStatList() {
+        String[] resTable=new String[4];
+        List<String[]> list=new ArrayList<>();
+        String myWhere = TdayTable.Cols.TIME_END + ">?";
+        String[] myArg = {"-1"};
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TdayTable.TABLE_NAME, myWhere, myArg));
+
+        try {
+
+            cursor.moveToFirst();
+            int i=0;
+            while (!cursor.isAfterLast()) {
+                list.add(cursor.getTdayStatInfo());
+
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+   return list;
+    }
 }

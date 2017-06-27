@@ -14,7 +14,7 @@
 
         <!-- - Стартовая активность -->
         <activity
-            android:name=".display.MainActivity"
+            android:name=".display.statistic_activity.StatisticListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
@@ -28,40 +28,52 @@
         <activity
             android:name=".display.my_trener_activiti.EProgListActivity"
             android:label="@string/title_e_prog_list_activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             >
         </activity>
         <activity
             android:name=".display.my_trener_activiti.EdayPage"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".display.my_trener_activiti.EProgListActivity">
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".display.my_trener_activiti.EexesAddActivity"
             android:label="@string/title_e_exes_add_activity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".display.my_trener_activiti.EdayPage">
+            android:parentActivityName=".display.my_trener_activiti.EdayPage"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".display.my_trener_activiti.EProgAdd"
             android:label="@string/my_prog_activity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"></activity>
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"
+            android:screenOrientation="portrait"></activity>
 
 
        <!-- -  активности настройки -->
     <activity
         android:name=".display.settings_activiti.SettingListExes"
-        android:label="@string/app_name_seting"        >
+        android:label="@string/app_name_seting"
+        android:screenOrientation="portrait">
     </activity>
         <!-- -  активности Start -->
         <activity
             android:name=".display.start_activity.StartAvtivty"
             android:label="@string/my_prog_activity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"></activity>
+            android:parentActivityName=".display.my_trener_activiti.EProgListActivity"
+            android:screenOrientation="portrait"></activity>
 
-
+        <!-- -  Вывод статистики  Start -->
+        <activity
+            android:name=".display.start_activity.DayStatistic"
+            android:label="@string/my_prog_activity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".display.statistic_activity.StatisticListActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".display.test.testActivity"
             android:label="@string/title_activity_test">
