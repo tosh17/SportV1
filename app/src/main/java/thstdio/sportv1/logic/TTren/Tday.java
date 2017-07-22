@@ -13,30 +13,15 @@ import thstdio.sportv1.logic.date.DateLab;
 public class Tday {
     private Eday day;
     private Map<Integer, Texes> dayList = new HashMap<Integer, Texes>();
-    private static Tday tday = null;
     private long id;
 
-    private Tday(Eday day) {
+    public Tday(Eday day) {
         this.day = day;
         for (int i = 0; i < day.countOfExes(); i++) {
             dayList.put(i, new Texes(day.getEdayexes(i)));
         }
     }
 
-    public static Tday getnewTday(Eday day) {
-        if (tday == null) {
-            tday = new Tday(day);
-            tday.setId(DateLab.now());
-            long temp=tday.getId();
-            temp=temp+1;
-        }
-
-        return tday;
-    }
-
-    public static Tday getTday() {
-        return tday;
-    }
 
 
     public Texes getTexes(int position) {
@@ -62,8 +47,12 @@ public class Tday {
         this.id = id;
         return this;
     }
+// информация о дне
     public int[] getDayInfo(){
         int i[]={day.getIdProg(),day.getNumberOfDay(),day.getIdDay()};
         return i;
+    }
+    public String getNameDay(){
+        return day.getDescription();
     }
 }

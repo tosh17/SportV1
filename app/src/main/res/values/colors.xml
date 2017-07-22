@@ -8,7 +8,7 @@
 
     <color name="colorPGreen">#AED581</color>
     <color name="colorPYellow">#FFF176</color>
-    <color name="colorPRed">#EF9A9A</color>
+    <color name="colorPRed">#FFAB91</color>
 
     <color name="colorPBlue">#61B7CF</color>
     <color name="colorPGrey">#999999</color>
@@ -19,6 +19,8 @@
     <color name="TOrange100">#99ffe0b2</color>
     <color name="Orange100">#ffe0b2</color>
     <color name="Orange50">#fff3e0</color>
+
+    <color name="Grey800">#455A64</color>
 
     <color name="LigthGreen50">#f9fbe7</color>
     <color name="TLigthGreen50">#99f9fbe7</color>

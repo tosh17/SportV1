@@ -121,28 +121,32 @@ public class DayStatisticTime extends Fragment implements OnChartValueSelectedLi
         for (int i = 3; i < table.length; i++) {
             f[i - 3] = (float) table[i] / total;
         }
-        textExes = new TextView[4];
-        textExes[0] = (TextView) v.findViewById(R.id.textExes1);
-        textExes[1] = (TextView) v.findViewById(R.id.textExes2);
-        textExes[2] = (TextView) v.findViewById(R.id.textExes3);
+  if(imax>=3) {
+      textExes = new TextView[4];
+      textExes[0] = (TextView) v.findViewById(R.id.textExes1);
+      textExes[1] = (TextView) v.findViewById(R.id.textExes2);
+      textExes[2] = (TextView) v.findViewById(R.id.textExes3);
 
-        textExes[0].setText(strExes[imax - 3] + " " + DateLab.parseSecondt(table[imax], ":"));
-        textExes[2].setText(strExes[imin - 3] + " " + DateLab.parseSecondt(table[imin], ":"));
-        textExes[1].setText(DateLab.parseSecondt(avg, ":"));
+      textExes[0].setText(strExes[imax - 3] + " " + DateLab.parseSecondt(table[imax], ":"));
+      textExes[2].setText(strExes[imin - 3] + " " + DateLab.parseSecondt(table[imin], ":"));
+      textExes[1].setText(DateLab.parseSecondt(avg, ":"));
 
-        exesTime.setHighlightPerTapEnabled(true);
-        exesTime.setTouchEnabled(true);
-        exesTime.setOnChartValueSelectedListener(this);
-        drawPie(exesTime, f, strExes, 360, ColorTemplate.COLORFUL_COLORS);
-        exesTime.setMinimumHeight(height);
-        rlParams = (LinearLayout.LayoutParams) exesTime.getLayoutParams();
-        rlParams.setMargins(50, -height / 5, 50, -height / 4);
+      exesTime.setHighlightPerTapEnabled(true);
+      exesTime.setTouchEnabled(true);
+      exesTime.setOnChartValueSelectedListener(this);
+      drawPie(exesTime, f, strExes, 360, ColorTemplate.JOYFUL_COLORS);
+      exesTime.setMinimumHeight(height);
+      rlParams = (LinearLayout.LayoutParams) exesTime.getLayoutParams();
+      rlParams.setMargins(50, -height / 5, 50, -height / 4);
        /* setLegend(exesTime, Legend.LegendVerticalAlignment.TOP
                 , Legend.LegendHorizontalAlignment.RIGHT,
                 Legend.LegendOrientation.VERTICAL,
                 height / 10);*/
 
-
+  }
+  else {
+      //отключить карточку
+  }
         return v;
     }
 
@@ -238,12 +242,15 @@ public class DayStatisticTime extends Fragment implements OnChartValueSelectedLi
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         PieEntry p = (PieEntry) e;
+        int position=(int) (h.getX());
         Toast toast = Toast.makeText(getContext(),
-                p.getLabel().toString() + System.lineSeparator() + DateLab.parseSecondt(table[3 + (int) (h.getX())], ":"), Toast.LENGTH_SHORT);
+                p.getLabel().toString() + System.lineSeparator() + DateLab.parseSecondt(table[3 + position], ":"), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 150);
         LinearLayout toastContainer = (LinearLayout) toast.getView();
         ImageView imageView = new ImageView(getContext());
-        imageView.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[(int) (h.getX())]);
+        int[] massColor = ColorTemplate.JOYFUL_COLORS;
+        int iColor=position%massColor.length;
+        imageView.setBackgroundColor(massColor[iColor]);
         imageView.setMinimumWidth(30);
         imageView.setMinimumHeight(30);
         toastContainer.addView(imageView, 0);

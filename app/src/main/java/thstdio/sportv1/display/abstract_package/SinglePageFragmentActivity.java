@@ -27,8 +27,10 @@ public abstract class SinglePageFragmentActivity extends AppCompatActivity imple
     protected ViewPager mViewPager;
     protected TabLayout tabLayout;
     protected Spinner toolSpinner;
-    Toolbar toolbar;
+    protected Toolbar toolbar;
     private int numberPage;
+
+    protected FragmentManager fragmentManager;
 
     protected abstract int getNumberPage();
 
@@ -58,8 +60,9 @@ public abstract class SinglePageFragmentActivity extends AppCompatActivity imple
 
         init();
         numberPage = getNumberPage();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentStatePagerAdapter pagerAdapter = new FragmentStatePagerAdapter(fragmentManager) {
+        fragmentManager = getSupportFragmentManager();
+
+        FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int namberOfDay) {
 
@@ -76,7 +79,7 @@ public abstract class SinglePageFragmentActivity extends AppCompatActivity imple
                 return getMyTitle(position);
             }
         };
-        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.setAdapter(pageAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,7 +104,10 @@ public abstract class SinglePageFragmentActivity extends AppCompatActivity imple
         }
         toolSpinner=(Spinner) findViewById(R.id.tool_spinner);
         toolSpinner.setVisibility(View.GONE);
+        tabIsVisible();
            }
+
+    protected void tabIsVisible(){}
 
     protected abstract void tabSelect(int idTab);
 

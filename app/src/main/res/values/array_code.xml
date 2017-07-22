@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mounth">
+        <item>                  </item>
+        <item>Января</item>
+        <item>Февраля</item>
+        <item>Марта</item>
+        <item>Апреля</item>
+        <item>Мая</item>
+        <item>Июня</item>
+        <item>Июля</item>
+        <item>Августа</item>
+        <item>Сентебря</item>
+        <item>Октября</item>
+        <item>Ноября</item>
+        <item>Декабря</item>
+        </string-array>
+
+    <string-array name="exes_main_values">
+    <item> Количество и Вес</item>
+        <item>Количество </item>
+        <item>Время </item>
+        <item>Количество.Вес,Время</item>
+    </string-array>
+</resources>

@@ -1,15 +1,14 @@
 package thstdio.sportv1.display.start_activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayout;
-import android.view.Display;
-import android.view.Gravity;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -29,68 +28,38 @@ import thstdio.sportv1.logic.base.BaseLab;
 import thstdio.sportv1.logic.date.DateLab;
 
 /**
- * Created by shcherbakov on 26.06.2017.
+ * Created by shcherbakov on 11.07.2017.
  */
 
-public class DayStatisticExes extends Fragment {
+public class StartExesHistoryDialog extends DialogFragment {
 
-
-    private static final String ARG_ID_EXES ="id_exes" ;
-    private static final String ARG_ID_TDAY = "id_tday";
-    private long id_tday;
-    private int id_exes;
+    private static final String ARG_ID_PROG ="id_prog" ;
+    private static String ARG_ID_EXES = "id_exes";
+    private static String ARG_ID_TDAY = "id_tday";
     private LineChart grafic;
-    private GridLayout table;
-    int wTable;
+    private GridView grid;
     private int max=0,min=1000;
-    public static DayStatisticExes newInstance(long day, int exes) {
-        Bundle args = new Bundle();
-
-        args.putSerializable(ARG_ID_EXES, exes);
-        args.putSerializable(ARG_ID_TDAY, day);
-        DayStatisticExes fragment = new DayStatisticExes();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        id_tday = getArguments().getLong(ARG_ID_TDAY);
-        id_exes = getArguments().getInt(ARG_ID_EXES);
-
-
-    }
+    private TextView title,dateTxt;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        View v = LayoutInflater.from(getActivity())
+                .inflate(R.layout.start_exes_dialog, null);
 
-        View v = inflater.inflate(R.layout.day_statistic_exes, container, false);
         grafic = (LineChart) v.findViewById(R.id.lineChart);
-        table =(GridLayout)  v.findViewById(R.id.table);
-        table.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                                       int oldBottom) {
-                // its possible that the layout is not complete in which case
-                // we will get all zero values for the positions, so ignore the event
-                if (left == 0 && top == 0 && right == 0 && bottom == 0) {
-                    return;
-                }
-                 wTable=right-left;
-                 tableChangeSize();
-                // Do what you need to do with the height/width since they are now set
-            }
-        });
+        grid=(GridView)  v.findViewById(R.id.ExesTable);
+        title=(TextView) v.findViewById(R.id.textTitle);
+        dateTxt=(TextView) v.findViewById(R.id.textDate);
         loadHistory();
-        return v;
-    }
-
-    private void tableChangeSize() {
-       for(int i=0;i<table.getChildCount();i++){
-           table.getChildAt(i).setMinimumWidth(wTable/4);
-       }
+        return new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog)
+                .setView(v)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ///////////////////////////////////////////////
+                    }
+                })
+                .create();
     }
 
     private void showGraph(LineChart mChart) {
@@ -153,7 +122,7 @@ public class DayStatisticExes extends Fragment {
         set1.setLineWidth(1f);
         set1.setCircleRadius(1f);
         set1.setDrawCircleHole(false);
-        set1.setValueTextSize(0f);
+       set1.setValueTextSize(0f);
 
         set1.setDrawFilled(true);
         set1.setFormLineWidth(1f);
@@ -181,46 +150,46 @@ public class DayStatisticExes extends Fragment {
     private void loadHistory() {
 
         BaseInterface bs = BaseLab.getBS(getContext());
-         int mainValue = bs.getEexes(id_exes).getMainValue();
-
+        long id_day = getArguments().getLong(ARG_ID_TDAY);
+        int id_exes = getArguments().getInt(ARG_ID_EXES);
+        int mainValue = bs.getEexes(id_exes).getMainValue();
+        title.setText(bs.getEexes(id_exes).getName());
 
         String[] lastExes={"type","count","weight","timer"};
-        ArrayList<int[]> temp = bs.findTexes(id_tday,id_exes);
+        ArrayList<int[]> temp = bs.findLastTexes(id_day,id_exes);
 
-        String[] gridStr=new String[(temp.size())*4];
-        for(int i=0;i<temp.size();i++){
-            gridStr[(i)*4]=temp.get(i)[0]==0?getResources().getString(R.string.razminka_str):getResources().getString(R.string.podhod_str);
+        String[] gridStr=new String[(temp.size()+1)*4];
+        dateTxt.setText(temp.get(temp.size()-1)[2]+"/"+temp.get(temp.size()-1)[1]+"/"+temp.get(temp.size()-1)[0]);
+        gridStr[1]=getResources().getString(R.string.count_str);
+        gridStr[2]=getResources().getString(R.string.weight_str);
+        gridStr[3]=getResources().getString(R.string.timer_str);
+        for(int i=0;i<temp.size()-1;i++){
+            gridStr[(i+1)*4]=temp.get(i)[0]==0?getResources().getString(R.string.razminka_str):getResources().getString(R.string.podhod_str);
 
-            gridStr[(i)*4+1]="---";
-            gridStr[(i)*4+2]="---";
-            gridStr[(i)*4+3]="---";
+                gridStr[(i+1)*4+1]="---";
+                gridStr[(i+1)*4+2]="---";
+                gridStr[(i+1)*4+3]="---";
             if(temp.get(i)[1]!=-1) {
                 switch(mainValue){
-                    case 1:  //количество
-                        gridStr[(i)*4+1]=new Integer(temp.get(i)[1]).toString();
-                        gridStr[(i)*4+3]=new Integer(temp.get(i)[3]).toString();
-                        break;
+                         case 1:  //количество
+                    gridStr[(i+1)*4+1]=new Integer(temp.get(i)[1]).toString();
+                    gridStr[(i+1)*4+3]=new Integer(temp.get(i)[3]).toString();
+                    break;
                     case 2://время
-                        gridStr[(i)*4+3]=new Integer(temp.get(i)[3]).toString();
+                        gridStr[(i+1)*4+3]=new Integer(temp.get(i)[3]).toString();
                         break;
                     default: //вес+количество (все)
-                        gridStr[(i)*4+1]=new Integer(temp.get(i)[1]).toString();
-                        gridStr[(i)*4+2]=new Integer(temp.get(i)[2]).toString();
-                        gridStr[(i)*4+3]= DateLab.parseSecondt(temp.get(i)[3],":");
+                        gridStr[(i+1)*4+1]=new Integer(temp.get(i)[1]).toString();
+                        gridStr[(i+1)*4+2]=new Integer(temp.get(i)[2]).toString();
+                        gridStr[(i+1)*4+3]= DateLab.parseSecondt(temp.get(i)[3],":");
                         break;
-                }}
+            }}
 
 
         }
-
-        for(int i=0;i<gridStr.length;i++){
-            TextView text=new TextView(getContext());
-            text.setText(gridStr[i]);
-            text.setGravity(Gravity.CENTER);
-            table.addView(text);
-
-        }
-
+        GridViewAdapter mAdapter = new GridViewAdapter(getContext(),
+                android.R.layout.simple_list_item_1,gridStr);
+        grid.setAdapter(mAdapter);
         ArrayList<int[]> val = bs.findLastListExes(id_exes, 100, false);
         val=reverce(val,mainValue);
         showGraph(grafic);
@@ -229,6 +198,7 @@ public class DayStatisticExes extends Fragment {
             {
                 setData(grafic, val, 1);
                 break;
+
             }
             case 1: //количество
             {
@@ -241,6 +211,8 @@ public class DayStatisticExes extends Fragment {
                 break;
             }
         }
+
+
     }
 
     private ArrayList<int[]> reverce(ArrayList<int[]> temp, int mainValue) {
@@ -269,6 +241,16 @@ public class DayStatisticExes extends Fragment {
             max=Math.max(max,temp.get(i)[index]);
             min=Math.min(min,temp.get(i)[index]);
         }
-        return newTemp;
+    return newTemp;
+    }
+
+    public static StartExesHistoryDialog newInstance(long day,int exes) {
+        Bundle args = new Bundle();
+
+        args.putSerializable(ARG_ID_EXES, exes);
+        args.putSerializable(ARG_ID_TDAY, day);
+        StartExesHistoryDialog fragment = new StartExesHistoryDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 }

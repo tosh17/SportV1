@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import thstdio.sportv1.logic.ETren.Eday;
@@ -16,12 +18,13 @@ import thstdio.sportv1.logic.TTren.Tday;
 import thstdio.sportv1.logic.base.sqlite.BsHelper;
 import thstdio.sportv1.logic.base.sqlite.MyCursorWrapper;
 import thstdio.sportv1.logic.base.sqlite.e.EdayTable;
+import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.EpodhodTable;
 import thstdio.sportv1.logic.base.sqlite.e.EprogTable;
-import thstdio.sportv1.logic.base.sqlite.e.EexesTable;
 import thstdio.sportv1.logic.base.sqlite.e.ExesTypeTable;
 import thstdio.sportv1.logic.base.sqlite.t.TdayTable;
 import thstdio.sportv1.logic.base.sqlite.t.TexesTable;
+import thstdio.sportv1.logic.date.DateLab;
 
 /**
  * Created by shcherbakov on 08.06.2017.
@@ -31,6 +34,7 @@ public class SqliteBS extends MainBS {
     private static SqliteBS ourInstance = null;
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
 
     public static SqliteBS getInstance(Context context) {
         if (ourInstance == null) {
@@ -62,9 +66,9 @@ public class SqliteBS extends MainBS {
         return cursor;
     }
 
-    private Cursor myMaxQuery(String tableName,String column ,String whereClause, String[] whereArgs) {
+    private Cursor myMaxQuery(String tableName, String column, String whereClause, String[] whereArgs) {
 
-        String maxCol[]={"Max("+column+") as id"};
+        String maxCol[] = {"Max(" + column + ") as id"};
         Cursor cursor = mDatabase.query(
                 tableName,
                 maxCol, // Columns - null выбирает все столбцы
@@ -73,6 +77,44 @@ public class SqliteBS extends MainBS {
                 null, // groupBy
                 null, // having
                 null // orderBy
+        );
+        int c = cursor.getCount();
+        return cursor;
+    }
+
+    /**
+     * возращает максимальное значение столбца
+     *
+     * @param table Таблица
+     * @param coll  искомый столбец
+     * @return
+     */
+    private String findMaxColl(String table, String coll, String whereClause, String[] whereArgs) {
+        MyCursorWrapper cursor = new MyCursorWrapper(myMaxQuery(table, coll, whereClause, whereArgs));
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String str = cursor.getId();
+                str = str == null ? "" : str;
+                return str;
+            }
+        } finally {
+            cursor.close();
+        }
+        return "";
+    }
+
+    private Cursor myOrderQuery(String tableName, String whereClause, String[] whereArgs, String order) {
+
+
+        Cursor cursor = mDatabase.query(
+                tableName,
+                null, // Columns - null выбирает все столбцы
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                order // orderBy
         );
         int c = cursor.getCount();
         return cursor;
@@ -100,7 +142,7 @@ public class SqliteBS extends MainBS {
 
     @Override
     public void setEexes(Eexes exes) {
-        if(getEexes(exes.getId())==null) {
+        if (getEexes(exes.getId()) == null) {
             ContentValues values = EexesTable.getContentValues(exes);
             mDatabase.insert(EexesTable.TABLE_NAME, null, values);
         }
@@ -230,9 +272,9 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public Eday getEday(int idprog, int numberOfDay) {
-        Eday day=getEdayInfo(idprog,numberOfDay);
+        Eday day = getEdayInfo(idprog, numberOfDay);
 
-        String myWhere = EdayTable.Cols.ID_DAY + " = ?" ;
+        String myWhere = EdayTable.Cols.ID_DAY + " = ?";
         String[] myArg = {new Integer(day.getIdDay()).toString()};
 
         MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EdayTable.TABLE_NAME, myWhere, myArg));
@@ -240,10 +282,10 @@ public class SqliteBS extends MainBS {
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                int[] idEdayList=cursor.getidEdayList();
-                day.add(getEexes(idEdayList[0]),getEpodhod(idEdayList[1]));
+                int[] idEdayList = cursor.getidEdayList();
+                day.add(getEexes(idEdayList[0]), getEpodhod(idEdayList[1]));
                 cursor.moveToNext();
-                 }
+            }
         } finally {
             cursor.close();
         }
@@ -252,8 +294,8 @@ public class SqliteBS extends MainBS {
 
     @Override
     public Eday getEdayInfo(int idprog, int numberOfDay) {
-        String myWhere = EdayTable.INFO.Cols.ID_PROG + " = ? AND " + EdayTable.INFO.Cols.NUMBER_DAY + " = ?" ;
-        String[] myArg = {new Integer(idprog).toString(),new Integer(numberOfDay).toString()};
+        String myWhere = EdayTable.INFO.Cols.ID_PROG + " = ? AND " + EdayTable.INFO.Cols.NUMBER_DAY + " = ?";
+        String[] myArg = {new Integer(idprog).toString(), new Integer(numberOfDay).toString()};
 
         MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EdayTable.INFO.TABLE_NAME, myWhere, myArg));
 
@@ -277,7 +319,7 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public void setEday(Eday day) {
-        if(getEdayInfo(day.getIdProg(),day.getNumberOfDay())!=null) return;
+        if (getEdayInfo(day.getIdProg(), day.getNumberOfDay()) != null) return;
         //Запись информации о дне
         ContentValues values = EdayTable.INFO.getContentValues(day);
         mDatabase.insert(EdayTable.INFO.TABLE_NAME, null, values);
@@ -292,27 +334,27 @@ public class SqliteBS extends MainBS {
     }
 
 
-     private List<Object> getProgHelper(int id){
+    private List<Object> getProgHelper(int id) {
 
-         String myWhere = EprogTable.INFO.Cols.ID_PROG + " = ?" ;
-         String[] myArg = {new Integer(id).toString()};
+        String myWhere = EprogTable.INFO.Cols.ID_PROG + " = ?";
+        String[] myArg = {new Integer(id).toString()};
 
-         MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EprogTable.INFO.TABLE_NAME, myWhere, myArg));
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EprogTable.INFO.TABLE_NAME, myWhere, myArg));
 
-         try {
-             cursor.moveToFirst();
-             while (!cursor.isAfterLast()) {
-                 List<Object> list = cursor.getEprogInfo();
-                 return list;
-             }
-         } finally {
-             cursor.close();
-         }
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                List<Object> list = cursor.getEprogInfo();
+                return list;
+            }
+        } finally {
+            cursor.close();
+        }
 
-         return null;
-     }
+        return null;
+    }
 
-     /**
+    /**
      * поиск прокрамы по id
      *
      * @param id ид программы
@@ -320,13 +362,13 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public Eprog getEprog(int id) {  //id--Description--count day
-        List<Object> list= getProgHelper(id);
-        Eprog prog=new Eprog((int)list.get(0),(String)list.get(1),(int)list.get(3));
+        List<Object> list = getProgHelper(id);
+        Eprog prog = new Eprog((int) list.get(0), (String) list.get(1), (int) list.get(3));
 
-     for(int i=1;i<=(int)list.get(2);i++){
-         prog.add(getEday(id,i));
-     }
-     return prog;
+        for (int i = 1; i <= (int) list.get(2); i++) {
+            prog.add(getEday(id, i));
+        }
+        return prog;
     }
 
     /**
@@ -336,13 +378,13 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public void setEprog(Eprog prog) {
-        if(getProgHelper(prog.getId())!=null) return;
+        if (getProgHelper(prog.getId()) != null) return;
         //Запись информации о  программе
         ContentValues values = EprogTable.INFO.getContentValues(prog);
         mDatabase.insert(EprogTable.INFO.TABLE_NAME, null, values);
 
         for (int i = 0; i < prog.getNumberOfDay(); i++) {
-            Eday day=prog.getDay(i);
+            Eday day = prog.getDay(i);
             setEday(day);
         }
     }
@@ -358,13 +400,13 @@ public class SqliteBS extends MainBS {
         String[] myArg = null;
 
         MyCursorWrapper cursor = new MyCursorWrapper(myQuery(EprogTable.INFO.TABLE_NAME, myWhere, myArg));
-        List<String> list=new ArrayList<>();
+        List<String> list = new ArrayList<>();
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                List<Object> temp= cursor.getEprogInfo(); //id--Description--count day
-                String str="";
-                str=temp.get(1)+"::"+temp.get(0)+"::"+temp.get(3);
+                List<Object> temp = cursor.getEprogInfo(); //id--Description--count day
+                String str = "";
+                str = temp.get(1) + "::" + temp.get(0) + "::" + temp.get(3);
                 list.add(str);
                 cursor.moveToNext();
             }
@@ -383,12 +425,12 @@ public class SqliteBS extends MainBS {
     @Override
     public void deleteEday(Eday day) {
 
-        String myWhere = EdayTable.INFO.Cols.ID_PROG+" = ? AND "+ EdayTable.INFO.Cols.NUMBER_DAY+" = ?";
-        String[] myArg = {new Integer(day.getIdProg()).toString(),new Integer(day.getNumberOfDay()).toString()};
+        String myWhere = EdayTable.INFO.Cols.ID_PROG + " = ? AND " + EdayTable.INFO.Cols.NUMBER_DAY + " = ?";
+        String[] myArg = {new Integer(day.getIdProg()).toString(), new Integer(day.getNumberOfDay()).toString()};
         mDatabase.delete(EdayTable.INFO.TABLE_NAME, myWhere, myArg);
-        myWhere = EdayTable.Cols.ID_DAY+" = ?";
+        myWhere = EdayTable.Cols.ID_DAY + " = ?";
         myArg = new String[1];
-        myArg[0]=new Integer(day.getIdDay()).toString();
+        myArg[0] = new Integer(day.getIdDay()).toString();
         mDatabase.delete(EdayTable.TABLE_NAME, myWhere, myArg);
     }
 
@@ -397,20 +439,9 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public int getIdExesMax() {
-        String myWhere = null;
-        String[] myArg = null;
-
-        MyCursorWrapper cursor = new MyCursorWrapper(myMaxQuery(EexesTable.TABLE_NAME,EexesTable.Cols.ID ,myWhere, myArg));
-        try {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                int id = cursor.getId();
-                return id;
-            }
-        } finally {
-            cursor.close();
-        }
-        return 0;
+        String str = findMaxColl(EexesTable.TABLE_NAME, EexesTable.Cols.ID, null, null);
+        if (str.equals("")) return 0;
+        return Integer.parseInt(str);
     }
 
     /**
@@ -420,7 +451,7 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public List<Eexes> getAllExes() {
-        List<Eexes> list=new ArrayList<>();
+        List<Eexes> list = new ArrayList<>();
         String myWhere = null;
         String[] myArg = null;
 
@@ -445,20 +476,10 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public int getIdProgMax() {
-        String myWhere = null;
-        String[] myArg = null;
+        String str = findMaxColl(EprogTable.INFO.TABLE_NAME, EprogTable.INFO.Cols.ID_PROG, null, null);
+        if (str.equals("")) return 0;
+        return Integer.parseInt(str);
 
-        MyCursorWrapper cursor = new MyCursorWrapper(myMaxQuery(EprogTable.INFO.TABLE_NAME,EprogTable.INFO.Cols.ID_PROG ,myWhere, myArg));
-        try {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                int id = cursor.getId();
-                return id;
-            }
-        } finally {
-            cursor.close();
-        }
-        return 0;
     }
 
     /**
@@ -487,6 +508,18 @@ public class SqliteBS extends MainBS {
     }
 
     /**
+     * Удаляет день из инфо таблицы
+     *
+     * @param idTday идификатор дня
+     */
+    @Override
+    public void delTday(long idTday) {
+        String myWhere = TdayTable.Cols.DATE + " = ?";
+        String[] myArg = {new Long(idTday).toString()};
+        mDatabase.delete(TdayTable.TABLE_NAME, myWhere, myArg);
+    }
+
+    /**
      * Запись выполненого подхода в базу
      *
      * @param tExesValues упорядочный массив данных(порядок согластно полям таблицы)
@@ -497,20 +530,26 @@ public class SqliteBS extends MainBS {
         mDatabase.insert(TexesTable.TABLE_NAME, null, values);
     }
 
+    /**
+     * Возращается сстатистика дня
+     *
+     * @param idTday
+     * @return
+     */
     @Override
     public int[][] getTdayStat(long idTday) {
-         int[][]resTable;
+        int[][] resTable;
         String myWhere = TexesTable.Cols.ID_T_DAY + " = ?";
         String[] myArg = {new Long(idTday).toString()};
 
         MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TexesTable.TABLE_NAME, myWhere, myArg));
 
         try {
-           resTable=new int[cursor.getCount()][8];
+            resTable = new int[cursor.getCount()][8];
             cursor.moveToFirst();
-            int i=0;
+            int i = 0;
             while (!cursor.isAfterLast()) {
-               resTable[i++]= cursor.getTdayStat();
+                resTable[i++] = cursor.getTdayStat();
 
                 cursor.moveToNext();
             }
@@ -527,8 +566,8 @@ public class SqliteBS extends MainBS {
      */
     @Override
     public List<String[]> getStatList() {
-        String[] resTable=new String[4];
-        List<String[]> list=new ArrayList<>();
+        String[] resTable = new String[4];
+        List<String[]> list = new ArrayList<>();
         String myWhere = TdayTable.Cols.TIME_END + ">?";
         String[] myArg = {"-1"};
 
@@ -537,7 +576,7 @@ public class SqliteBS extends MainBS {
         try {
 
             cursor.moveToFirst();
-            int i=0;
+            int i = 0;
             while (!cursor.isAfterLast()) {
                 list.add(cursor.getTdayStatInfo());
 
@@ -546,6 +585,319 @@ public class SqliteBS extends MainBS {
         } finally {
             cursor.close();
         }
-   return list;
+        return list;
+    }
+
+    /**
+     * Поиск не завершенного дня
+     *
+     * @return Возращает тренеровочный день и null если не найдено
+     */
+    @Override
+    public Tday findNotEndTday() {
+        Tday tDay = null;
+        String myWhere = TdayTable.Cols.TIME_END + " = ?";
+        String[] myArg = {"-1"};
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TdayTable.TABLE_NAME, myWhere, myArg));
+
+        try {
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                String[] temp = cursor.getTdayStatInfo();
+
+                tDay = new Tday(getEday(Integer.parseInt(temp[1]), Integer.parseInt(temp[2])));
+                tDay.setId(Long.parseLong(temp[0]));
+                loadTday(tDay);
+                return tDay;
+            }
+        } finally {
+            cursor.close();
+        }
+        return tDay;
+    }
+
+    /**
+     * Вспомогательная функция для findNotEndTday()
+     *
+     * @param tDay
+     * @return
+     */
+    private Tday loadTday(Tday tDay) {
+
+        int[][] log = getTdayStat(tDay.getId());
+        int z = -1;
+        for (int i = 0; i < log.length; i++) {
+            int idExes = log[i][1];
+            int number = log[i][2];
+            int count = log[i][4];
+            int weight = log[i][5];
+            int timer = log[i][7];
+            z = -1;
+            while (tDay.getTexes(++z).getExes().getId() != idExes) ;
+
+            tDay.getTexes(z).loadExes(number, count, weight, timer);
+        }
+        return tDay;
+    }
+
+    /**
+     * Поиск пары значений номер програмы и дня для которого была тренеровка
+     *
+     * @return {idProg,idDay}
+     */
+    @Override
+    public int[] findLastTday(int idProg) {
+        int result[] = {0, 0};
+        String myWhere = null;
+        String[] myArg = null;
+        if (idProg != 0) {
+            myWhere = TdayTable.Cols.ID_PROG + " = ?";
+            myArg = new String[1];
+            myArg[0] = new Integer(idProg).toString();
+        }
+
+        String str = findMaxColl(TdayTable.TABLE_NAME, TdayTable.Cols.TIME_END, myWhere, myArg);
+        if (str.equals("")) return result;
+        String myWhere1 = TdayTable.Cols.TIME_END + " = ?";
+        String[] myArg1 = {str};
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TdayTable.TABLE_NAME, myWhere1, myArg1));
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String[] temp = cursor.getTdayStatInfo();
+                result[0] = Integer.parseInt(temp[1]);
+                result[1] = Integer.parseInt(temp[2]);
+                return result;
+            }
+        } finally {
+            cursor.close();
+        }
+        return result;
+    }
+
+    /**
+     * Поис последнего времени записи тренеровочного дна(для завершение брошенной тренеровки)
+     *
+     * @param idTday
+     * @return
+     */
+    @Override
+    public long findLastTime(long idTday) {
+        String myWhere = TexesTable.Cols.ID_T_DAY + " = ?";
+        String[] myArg = {new Long(idTday).toString()};
+
+        String str = findMaxColl(TexesTable.TABLE_NAME, TexesTable.Cols.TIME_START, myWhere, myArg);
+        if (str.equals("")) return -1;
+        return Long.parseLong(str);
+    }
+
+    /**
+     * Поиск результатов последнего упражнения.
+     *
+     * @param idExes ид упражнения
+     * @param type   подход или разминка
+     * @return {вес, подходы, таймер}
+     */
+    @Override
+    public int[] findLastExes(int idExes, int type) {
+        String myWhere = TexesTable.Cols.ID_EXES + " = ? AND " + TexesTable.Cols.TYPE + " = ? AND ( NOT " + TexesTable.Cols.COUNT + " = ?)";
+        String[] myArg = {new Integer(idExes).toString(), new Integer(type).toString(), "-1"};
+
+        String str = findMaxColl(TexesTable.TABLE_NAME, TexesTable.Cols.TIME_START, myWhere, myArg);
+        if (str.equals("")) return new int[]{0, 0, 0};
+        long time = Long.parseLong(str);
+
+
+        String myWhere1 = TexesTable.Cols.TIME_START + " = ?";
+        String[] myArg1 = {str};
+        int[] resTable;
+        int[] result = new int[3];
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TexesTable.TABLE_NAME, myWhere1, myArg1));
+
+        try {
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                resTable = cursor.getTdayStat();
+                result[0] = resTable[4];
+                result[1] = resTable[5];
+                result[2] = resTable[7];
+                return result;
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    /**
+     * возращает значения последних тренеровок(разминки не учитывается)
+     *
+     * @param id_exes индификатор тренеровки
+     * @param count
+     * @param lasted  учитываем текущую тренеровку ?  @return
+     */
+    @Override
+    public ArrayList<int[]> findLastListExes(int id_exes, int count, boolean lasted) {
+        String myWhere = TexesTable.Cols.ID_EXES + " = ? AND " + TexesTable.Cols.TYPE + " = ?";
+        String[] myArg = {new Integer(id_exes).toString(), "1"};
+        String order = TexesTable.Cols.ID_T_DAY + " DESC";
+        ArrayList<int[]> result = new ArrayList<>();
+        int[][] tempResult = new int[count][3];
+
+        MyCursorWrapper cursor = new MyCursorWrapper(myOrderQuery(TexesTable.TABLE_NAME, myWhere, myArg, order));
+
+        try {
+
+            cursor.moveToFirst();
+            if (!lasted && !cursor.isAfterLast()) cursor.moveToNext();
+            int step = 0;
+            while (!cursor.isAfterLast() && step < count) {
+                int[] resTable = cursor.getTdayStat();
+                if (resTable[4] != -1 && resTable[3] != 0) {
+                    tempResult[step][0] = resTable[4];
+                    tempResult[step][1] = resTable[5];
+                    tempResult[step][2] = resTable[7];
+                    result.add(tempResult[step]);
+                    step++;
+                }
+                cursor.moveToNext();
+            }
+
+        } finally {
+
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    /**
+     * Поиск статистики информации
+     * по упражнению с последней тренеровки
+     *
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    @Override
+    public ArrayList<int[]> findLastTexes(long idTday, int idExes) {
+        String tWhere = TdayTable.Cols.DATE + " = ?";
+        String[] tArg = {new Long(idTday).toString()};
+        int idProg = 0, idDay = 0;
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TdayTable.TABLE_NAME, tWhere, tArg));
+
+        try {
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                String[] temp = cursor.getTdayStatInfo();
+
+                idProg = Integer.parseInt(temp[1]);
+                idDay = Integer.parseInt(temp[2]);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        String myWhere = TdayTable.Cols.ID_PROG + " = ? AND " + TdayTable.Cols.NUMBER_DAY + " = ?";
+        String[] myArg = {new Integer(idProg).toString(), new Integer(idDay).toString()};
+        String order = TdayTable.Cols.DATE + " DESC";
+        ArrayList<int[]> result = new ArrayList<>();
+        boolean isStop = false;
+        cursor = new MyCursorWrapper(myOrderQuery(TdayTable.TABLE_NAME, myWhere, myArg, order));
+
+        try {
+            cursor.moveToFirst();
+            cursor.moveToNext();
+            while (!cursor.isAfterLast()) {
+
+                String[] temp = cursor.getTdayStatInfo();
+                long date = Long.parseLong(temp[0]);
+                String myWhere1 = TexesTable.Cols.ID_T_DAY + " = ? AND " + TexesTable.Cols.ID_EXES + " = ?";
+                String[] myArg1 = {new Long(date).toString(), new Integer(idExes).toString()};
+                MyCursorWrapper cursor1 = new MyCursorWrapper(myQuery(TexesTable.TABLE_NAME, myWhere1, myArg1));
+                try {
+                    cursor1.moveToFirst();
+                    result.add(DateLab.parseToUserTime(date));
+                    while (!cursor1.isAfterLast()) {
+                        int[] tempResult = new int[5];
+                        int[] resTable = cursor1.getTdayStat();
+                        tempResult[0] = resTable[3];
+                        tempResult[1] = resTable[4];
+                        if (resTable[4] != -1) isStop = true;
+                        tempResult[2] = resTable[5];
+                        tempResult[3] = resTable[7];
+                        tempResult[4] = resTable[2];
+                        result.add(tempResult);
+                        cursor1.moveToNext();
+                    }
+                } finally {
+                    cursor1.close();
+                }
+                if (!isStop) {
+                    cursor.moveToNext();
+                    result.clear();
+                } else break;
+            }
+        } finally {
+            cursor.close();
+        }
+
+        Collections.sort(result, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[4] > o2[4]) return 1;
+                return -1;
+            }
+        });
+        return result;
+    }
+
+    /**
+     * Поиск статистики информации
+     * по упражнению с заданной тренеровки
+     *
+     * @param idTday
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    @Override
+    public ArrayList<int[]> findTexes(long idTday, int idExes) {
+        String myWhere = TexesTable.Cols.ID_T_DAY + " = ? AND " + TexesTable.Cols.ID_EXES + " = ?";
+        String[] myArg = {new Long(idTday).toString(), new Integer(idExes).toString()};
+        MyCursorWrapper cursor = new MyCursorWrapper(myQuery(TexesTable.TABLE_NAME, myWhere, myArg));
+        ArrayList<int[]> result = new ArrayList<>();
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int[] tempResult = new int[5];
+                int[] resTable = cursor.getTdayStat();
+                tempResult[0] = resTable[3];
+                tempResult[1] = resTable[4];
+                tempResult[2] = resTable[5];
+                tempResult[3] = resTable[7];
+                tempResult[4] = resTable[2];
+                result.add(tempResult);
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        Collections.sort(result, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[4] > o2[4]) return 1;
+                return -1;
+            }
+        });
+           return result;
+
     }
 }

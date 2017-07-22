@@ -1,5 +1,6 @@
 package thstdio.sportv1.logic.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import thstdio.sportv1.logic.ETren.Eday;
@@ -309,6 +310,87 @@ public class MainBS implements BaseInterface {
      */
     @Override
     public List<String[]> getStatList() {
+        return null;
+    }
+
+    /**
+     * Поиск пары значений номер програмы и дня для которого была тренеровка
+     *
+     * @return {idProg,idDay}
+     */
+    @Override
+    public int[] findLastTday(int idProg) {
+        return new int[0];
+    }
+
+    /**
+     * Поис последнего времени записи тренеровочного дна(для завершение брошенной тренеровки)
+     *
+     * @param idTday
+     * @return
+     */
+    @Override
+    public long findLastTime(long idTday) {
+        return 0;
+    }
+
+    /**
+     * Удаляет день из инфо таблицы
+     *
+     * @param idTday идификатор дня
+     */
+    @Override
+    public void delTday(long idTday) {
+
+    }
+
+    /**
+     * Поиск результатов последнего упражнения.
+     *
+     * @param idExes ид упражнения
+     * @param type   подход или разминка
+     * @return {вес, подходы, таймер}
+     */
+    @Override
+    public int[] findLastExes(int idExes, int type) {
+        return new int[0];
+    }
+
+    /**
+     * возращает значения последних тренеровок(разминки не учитывается)
+     *
+     * @param id_exes индификатор тренеровки
+     * @param count
+     * @param lasted  учитываем текущую тренеровку ?  @return
+     */
+    @Override
+    public ArrayList<int[]> findLastListExes(int id_exes, int count, boolean lasted) {
+        return null;
+    }
+
+    /**
+     * Поиск статистики информации
+     * по упражнению с последней тренеровки
+     *
+     *  * @param idTday
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    @Override
+    public ArrayList<int[]> findLastTexes(long idTday, int idExes) {
+        return null;
+    }
+
+    /**
+     * Поиск статистики информации
+     * по упражнению с заданной тренеровки
+     *
+     * @param idTday
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    @Override
+    public ArrayList<int[]> findTexes(long idTday, int idExes) {
         return null;
     }
 }

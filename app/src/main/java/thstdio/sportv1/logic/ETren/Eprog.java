@@ -61,5 +61,8 @@ public class Eprog {
     }
 
     public int getNumberOfDay(){return listDay.size();}
-
+    public Eday getNextDay(int position){
+        position=(position+1)%getNumberOfDay();
+        return  getDay(position);
+    }
 }

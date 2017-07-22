@@ -35,7 +35,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="20"
             android:layout_gravity="center_vertical|left"
-            tools:src="@drawable/chest"
+            tools:src="@drawable/all"
             />
 
         <TextView

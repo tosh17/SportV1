@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hint_name">Название Упражнения</string>
-    <string name="free_weight">свободныq вес</string>
+    <string name="free_weight">свободный вес</string>
     <string name="podhod0">Разминка</string>
     <string name="podhod1">Подход</string>
     <string name="min">min</string>

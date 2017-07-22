@@ -1,8 +1,10 @@
 package thstdio.sportv1.display.my_trener_activiti;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -79,8 +81,33 @@ public class EProgListFragment extends Fragment {
          */
         @Override
         public void onClick(View v) {
+            if(position!=1){
             Intent intent = EdayPage.newIntent(getActivity(), position);
-            startActivity(intent);
+            startActivity(intent);}
+            else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                 builder.setMessage( R.string.my_trener_e_prog_dialog_message)
+                        .setCancelable(false)
+                        .setPositiveButton(getResources().getString(R.string.start_dialog2_start),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+
+                                        dialog.cancel();
+                                    }
+                                })
+
+                        .setNegativeButton(getResources().getString(R.string.my_trener_e_prog_dialog_cancel),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
+            }
         }
 
     }

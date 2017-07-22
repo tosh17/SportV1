@@ -38,6 +38,8 @@ public class MyCursorWrapper extends CursorWrapper {
         int isSolved = getInt(getColumnIndex(EexesTable.Cols.FREE_WEIGHT));
         Eexes exes=new Eexes(id,name);
         exes.setFreeWeight(isSolved==0 ? false : true);
+        int mainValue=getInt(getColumnIndex(EexesTable.Cols.MAIN_VALUE));
+        exes.setMainValue(mainValue);
         return exes;
 
     }
@@ -88,8 +90,8 @@ public class MyCursorWrapper extends CursorWrapper {
         return list;
     }
 
-    public int getId() {
-        int id = getInt(getColumnIndex("id"));
+    public String getId() {
+        String id = getString(getColumnIndex("id"));
         return id;
     }
 
@@ -103,7 +105,7 @@ public class MyCursorWrapper extends CursorWrapper {
         tdayStat[3]=getInt(getColumnIndex(TexesTable.Cols.TYPE));
         tdayStat[4]=getInt(getColumnIndex(TexesTable.Cols.COUNT));
         tdayStat[5]=getInt(getColumnIndex(TexesTable.Cols.WEIGHT));
-        tdayStat[6]=getInt(getColumnIndex(TexesTable.Cols.WEIGHT));
+        tdayStat[6]=getInt(getColumnIndex(TexesTable.Cols.WEIGHT_PLUS));
         tdayStat[7]=getInt(getColumnIndex(TexesTable.Cols.TIMER));
 
 
@@ -116,6 +118,6 @@ public class MyCursorWrapper extends CursorWrapper {
         str[1]=getString(getColumnIndex(TdayTable.Cols.ID_PROG));
         str[2]=getString(getColumnIndex(TdayTable.Cols.NUMBER_DAY));
         str[3]=DateLab.parseSecondt((int) (getLong(getColumnIndex(TdayTable.Cols.TIME_END))-getLong(getColumnIndex(TdayTable.Cols.DATE)))/1000,":");
-       return str;
+        return str;
     }
 }

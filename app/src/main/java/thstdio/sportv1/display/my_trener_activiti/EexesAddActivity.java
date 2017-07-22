@@ -3,6 +3,7 @@ package thstdio.sportv1.display.my_trener_activiti;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 import android.view.View;
 
 import thstdio.sportv1.display.abstract_package.AbstractNavigationActivity;
@@ -71,4 +72,14 @@ public class EexesAddActivity extends SingleFragmentActivity {
         fab.setVisibility(View.INVISIBLE);
         addFragment(EexesSearchFragment.newInstance(0),"new");
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

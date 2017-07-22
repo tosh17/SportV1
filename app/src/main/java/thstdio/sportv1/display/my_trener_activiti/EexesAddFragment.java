@@ -1,15 +1,18 @@
 package thstdio.sportv1.display.my_trener_activiti;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -27,7 +30,7 @@ import thstdio.sportv1.logic.base.BaseLab;
  * Created by shcherbakov on 16.06.2017.
  */
 
-public class EexesAddFragment extends Fragment implements EexesAddActivity.Callbacks, View.OnClickListener {
+public class EexesAddFragment extends Fragment implements CompoundButton.OnCheckedChangeListener,EexesAddActivity.Callbacks, View.OnClickListener {
     private static final String DAY_ID = "day_id";
     private static final int MAX_PODGOD = 10;
     private static final String PROG_ID = "prog_id";
@@ -108,7 +111,7 @@ public class EexesAddFragment extends Fragment implements EexesAddActivity.Callb
         nameExes = (EditText) v.findViewById(R.id.editName);
         exesType = (Spinner) v.findViewById(R.id.spinner);
         isFreeWeight = (Switch) v.findViewById(R.id.add_exes_switchWeight);
-
+        isFreeWeight.setOnCheckedChangeListener(this);
         podhodType[0] = (Switch) v.findViewById(R.id.add_exes_switch0);
         min[0] = (EditText) v.findViewById(R.id.add_exes_editTextMin0);
         max[0] = (EditText) v.findViewById(R.id.add_exes_editTextMax0);
@@ -294,6 +297,7 @@ public class EexesAddFragment extends Fragment implements EexesAddActivity.Callb
 
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -350,4 +354,29 @@ public class EexesAddFragment extends Fragment implements EexesAddActivity.Callb
     }
 
 
+    /**
+     * Called when the checked state of a compound button has changed.
+     *
+     * @param buttonView The compound button view whose state has changed.
+     * @param isChecked  The new checked state of buttonView.
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final String[] mChooseCats = getResources().getStringArray(R.array.exes_main_values);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getResources().getString(R.string.e_exes_add_dialog_title))
+                .setCancelable(false)
+                // добавляем переключатели
+                .setSingleChoiceItems(mChooseCats, -1,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int item) {
+                                exes.setMainValue(item);
+                              dialog.cancel();
+                            }
+                        });
+        builder.create();
+        builder.show();
+    }
 }

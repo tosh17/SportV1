@@ -3,6 +3,7 @@ package thstdio.sportv1.display.my_trener_activiti;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import thstdio.sportv1.R;
 import thstdio.sportv1.display.abstract_package.SinglePageFragmentActivity;

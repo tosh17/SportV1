@@ -2,6 +2,9 @@
 <resources>
     <string name="podhod_str">Подход  </string>
     <string name="razminka_str">Разминка</string>
+    <string name="count_str">Кол-во</string>
+    <string name="weight_str">Вес</string>
+    <string name="timer_str">Время</string>
     <string name="warning_exes_add_max_limit">Максимальное допустимое значение подходов</string>
     <string name="warning_exes_add_min_limit">Не создано ни одного подхода</string>
     <string name="warning_exes_search">Вы можете выбрать только одно упражнение</string>
@@ -19,4 +22,17 @@
     <string name="day_statistic_lable_exes_3">Min</string>
     <string name="day_statistic_lable_exes_4">Sellect</string>
 
+    <string name="start_dialog_title">Найдена Активность!</string>
+    <string name="start_dialog_mess">Предыдущая тренеровка не Завершена! %s Вы хотите продолжить или завершить?</string>
+    <string name="start_dialog_continion">Продолжить</string>
+    <string name="start_dialog_cancel">Завершить</string>
+
+    <string name="start_dialog2_title">Начинаем Тренеровку</string>
+    <string name="start_dialog2_start">Старт</string>
+    <string name="start_dialog2_change">Выбрать тренеровку</string>
+
+    <string name="my_trener_e_prog_dialog_message">Начать тренеровку?</string>
+    <string name="my_trener_e_prog_dialog_cancel">Отмена</string>
+
+    <string name="e_exes_add_dialog_title">Выберите характеристику.</string>
 </resources>

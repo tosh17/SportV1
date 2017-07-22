@@ -1,5 +1,6 @@
 package thstdio.sportv1.logic.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import thstdio.sportv1.logic.ETren.*;
@@ -157,6 +158,12 @@ public interface BaseInterface {
     public void endTday(Tday day,long endTime);
 
     /**
+     * Удаляет день из инфо таблицы
+     * @param idTday идификатор дня
+     */
+    public void delTday(long idTday);
+
+    /**
      * Поиск не завершенного дня
      * @return  Возращает тренеровочный день
      */
@@ -190,4 +197,51 @@ public interface BaseInterface {
       * @return {IdDay,ProgName,DayName,TotalTime}
      */
     List<String[]> getStatList();
+
+    /**
+     * Поиск пары значений номер програмы и дня для которого была тренеровка
+     * @return {idProg,idDay}
+     */
+    public int[] findLastTday(int idProg);
+
+    /**
+     * Поис последнего времени записи тренеровочного дна(для завершение брошенной тренеровки)
+     * @param idTday
+     * @return
+     */
+    public long findLastTime(long idTday);
+
+    /**
+     * Поиск результатов последнего упражнения.
+     * @param idExes ид упражнения
+     * @param type   подход или разминка
+     * @return  {вес, подходы, таймер}
+     */
+    public int[] findLastExes(int idExes,int type);
+
+    /**
+     * возращает значения последних тренеровок(разминки не учитывается)
+     * @param id_exes индификатор тренеровки
+     * @param lasted учитываем текущую тренеровку ?
+     * @return
+     */
+    public ArrayList<int[]> findLastListExes(int id_exes,int count,boolean lasted);
+
+    /**
+     * Поиск статистики информации
+     * по упражнению с последней тренеровки
+     *
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    public ArrayList<int[]> findLastTexes(long idTday,int idExes);
+    /**
+     * Поиск статистики информации
+     * по упражнению с заданной тренеровки
+     *
+     * @param idExes упражнения
+     * @return массив статистики
+     */
+    public ArrayList<int[]> findTexes(long idTday,int idExes);
 }
+

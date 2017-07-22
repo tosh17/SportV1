@@ -11,10 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import thstdio.sportv1.R;
+import thstdio.sportv1.display.measure.Measure;
 import thstdio.sportv1.display.my_trener_activiti.EProgListActivity;
-import thstdio.sportv1.display.start_activity.DayStatistic;
 import thstdio.sportv1.display.start_activity.StartAvtivty;
 import thstdio.sportv1.display.statistic_activity.StatisticListActivity;
+import thstdio.sportv1.display.test.Generator;
 
 public abstract class AbstractNavigationActivity extends SingleFragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -76,8 +77,14 @@ public abstract class AbstractNavigationActivity extends SingleFragmentActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_mesuare) {
-
+            intent = new Intent(this, Measure.class);
+            startActivity(intent);
         }
+        else if (id == R.id.nav_send) {
+            intent  = new Intent(this, Generator.class);
+            startActivity(intent);
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

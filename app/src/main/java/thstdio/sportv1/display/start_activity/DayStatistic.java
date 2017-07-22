@@ -33,14 +33,15 @@ public class DayStatistic extends SinglePageFragmentActivity {
 
     @Override
     protected int getNumberPage() {
-        return 1;
+        return 1+idExes.length;
     }
 
     @Override
     protected Fragment setFragment(int position) {
         if (position == 0)
             return DayStatisticTime.newInstance(dayTimeStat(),strExes);
-        return null;
+
+        return DayStatisticExes.newInstance(idTday,idExes[position-1]);
     }
 
     @Override
@@ -56,6 +57,11 @@ public class DayStatistic extends SinglePageFragmentActivity {
     @Override
     protected CharSequence getMyTitle(int position) {
         return null;
+    }
+
+    @Override
+    protected void tabIsVisible() {
+        tabLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -89,8 +95,8 @@ public class DayStatistic extends SinglePageFragmentActivity {
         if (resTable[n][COUNT] == -1) {
             while (resTable[n--][COUNT] == -1) ;
         }
-        res[2] = resTable[n][TIME_START]  + resTable[n][TIMER] - res[1] - res[0];
 
+        res[2] = resTable[n][TIME_START]  + resTable[n][TIMER] - res[1] - res[0];
         n = 3;
 
         for (int i : idExes) {
@@ -127,5 +133,6 @@ public class DayStatistic extends SinglePageFragmentActivity {
         for(int i:res) strExes[n++]=bs.getEexes(i).getName();
         return res;
     }
+
 
 }

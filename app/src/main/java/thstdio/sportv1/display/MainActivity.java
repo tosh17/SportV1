@@ -47,10 +47,11 @@ public class MainActivity extends AbstractNavigationActivity {
             BaseInterface bs2 = new CollectionBS();
             Eprog prog=bs2.getEprog(1);
             bs1.setEprog(prog);
-            prog=bs2.getEprog(3);
-            bs1.setEprog(prog);
-            prog=bs2.getEprog(2);
-            bs1.setEprog(prog);
+            for(int i=11;i<=15;i++){
+                prog=bs2.getEprog(i);
+                bs1.setEprog(prog);
+            }
+
             for(int i=0;i<30;i++){
                 int z=bs2.getExesType(i);
                 bs1.setExesType(i,z);

@@ -16,7 +16,7 @@ public class TexesTable {
         public static final String ID_EXES = "id_exes";
         public static final String NUMBER_PODHOD = "number";
         public static final String TYPE  = "type";  //0--разминка 1--подход
-        public static final String COUNT  = "count";
+        public static final String COUNT  = "counts";
         public static final String WEIGHT = "weight";
         public static final String WEIGHT_PLUS = "weight_plus";
         public static final String TIMER = "timer";

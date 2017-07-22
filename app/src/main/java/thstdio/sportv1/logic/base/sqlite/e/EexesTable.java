@@ -16,13 +16,15 @@ public final class EexesTable {
         public static final String ID="id_exes";
         public static final String NAME="name";
         public static final String FREE_WEIGHT="free_weight";
+        public static final String MAIN_VALUE="main_value";
     }
     public static void createTable(SQLiteDatabase db){
         db.execSQL("create table " + TABLE_NAME+"(" +
                 " _id integer primary key autoincrement, " +
                 Cols.ID + " integer, " +
                 Cols.NAME + ", " +
-                Cols.FREE_WEIGHT +
+                Cols.FREE_WEIGHT+ " integer, " +
+                Cols.MAIN_VALUE+ " integer" +
                 ")");
 
     }
@@ -31,6 +33,7 @@ public final class EexesTable {
         values.put(Cols.ID, eexes.getId());
         values.put(Cols.NAME, eexes.getName());
         values.put(Cols.FREE_WEIGHT, eexes.isFreeWeight() ? 1 : 0);
+        values.put(Cols.MAIN_VALUE, eexes.getMainValue());
         return values;
     }
 

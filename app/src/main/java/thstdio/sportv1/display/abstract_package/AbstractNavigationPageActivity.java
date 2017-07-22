@@ -12,12 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import thstdio.sportv1.R;
+import thstdio.sportv1.display.measure.Measure;
 import thstdio.sportv1.display.my_trener_activiti.EProgListActivity;
 import thstdio.sportv1.display.start_activity.StartAvtivty;
 import thstdio.sportv1.display.statistic_activity.StatisticListActivity;
+import thstdio.sportv1.display.test.Generator;
 
 public abstract class AbstractNavigationPageActivity extends SinglePageFragmentActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     public abstract void initAfterNavigation();
 
@@ -26,6 +28,7 @@ public abstract class AbstractNavigationPageActivity extends SinglePageFragmentA
         return R.layout.abstract_page_activity_main;
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,21 +63,25 @@ public abstract class AbstractNavigationPageActivity extends SinglePageFragmentA
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent intent ;
+        Intent intent;
         if (id == R.id.nav_start) {
-            intent  = new Intent(AbstractNavigationPageActivity.this, StartAvtivty.class);
+            intent = new Intent(AbstractNavigationPageActivity.this, StartAvtivty.class);
             startActivity(intent);
         } else if (id == R.id.nav_my_tren) {
-            intent  = new Intent(AbstractNavigationPageActivity.this, EProgListActivity.class);
+            intent = new Intent(AbstractNavigationPageActivity.this, EProgListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_statistic) {
-            intent  = new Intent(this, StatisticListActivity.class);
+            intent = new Intent(this, StatisticListActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_mesuare) {
-
+            intent = new Intent(this, Measure.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_send) {
+            intent = new Intent(this, Generator.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -84,7 +91,7 @@ public abstract class AbstractNavigationPageActivity extends SinglePageFragmentA
 
     @Override
     public void onClick(View v) {
-       if(v.getId()==R.id.fab)  fabOnClic();
+        if (v.getId() == R.id.fab) fabOnClic();
     }
 
     protected abstract void fabOnClic();

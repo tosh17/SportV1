@@ -25,6 +25,7 @@ import java.util.List;
 import thstdio.sportv1.R;
 import thstdio.sportv1.display.abstract_package.MyAsset;
 import thstdio.sportv1.display.settings_activiti.SettingListExes;
+import thstdio.sportv1.display.start_activity.StartAvtivty;
 import thstdio.sportv1.logic.ETren.Eday;
 import thstdio.sportv1.logic.base.BaseInterface;
 import thstdio.sportv1.logic.base.BaseLab;
@@ -173,6 +174,11 @@ public class EdayPageFragment extends Fragment implements SharedPreferences.OnSh
     @Override
     public void clickFab() {
         if (isSelect)  addDayExes();
+        else {
+                       Intent intent= StartAvtivty.newIntent(getContext(),idProg);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     @Override
